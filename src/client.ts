@@ -1,25 +1,25 @@
-import { Client, ClientOptions, Collection, Interaction, Message } from "discord.js";
-import { EventOptions, ICommand, ISlashCommand } from "./types";
+import { Client, Collection, Interaction, Message } from "discord.js";
+import { EventOptions, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from "./types";
 import Handler from "./utils/handler";
-import { join } from "path"
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 
 export default class InfiniteClient extends Client {
 
     private djsRest: REST;
+    private databaseType: DatabaseTypes | undefined;
+    private useDatabase: boolean;
     public prefix: string;
     public commands: Collection<string, ICommand> = new Collection();
     public slashCommands: Collection<string, ISlashCommand> = new Collection();
     public events: Collection<string, EventOptions> = new Collection();
-    public handler: Handler = new Handler(this, {
-        // commands: join(__dirname, "..", "commands"),
-        slashCommands: join(__dirname, "..", "src/commands"),
-        events: join(__dirname, "..", "events")
-    });
+    public handler?: Handler;
 
-    constructor(token: string, options: ClientOptions) {
+    constructor(token: string, options: IClientOptions) {
         super(options);
+        this.useDatabase = options.useDatabase
+        if (!this.useDatabase) this.databaseType = undefined
+        else this.databaseType = options.databaseType
         this.token = token
         this.djsRest = new REST({ version: "9" }).setToken(this.token);
         this.prefix = "!";
@@ -74,13 +74,21 @@ export default class InfiniteClient extends Client {
     //     }
     // }
 
-    public setPrefix(prefix: string) {
-        this.prefix = prefix
+    public addCommands(path: string) {
+        this.handler = new Handler(this, { commands: path })
+    }
+
+    public addSlashCommands(path: string) {
+        this.handler = new Handler(this, { slashCommands: path })
+    }
+
+    public addEvents(path: string) {
+        this.handler = new Handler(this, { events: path })
     }
 
     public async start(): Promise<string> {
         if (!this.token) throw new Error("A token was not provided");
-        await this.handler.loadSlashCommands();
+        await this.handler?.loadSlashCommands();
         // await this.registerSlashCommands();
         return await this.login(this.token);
     }

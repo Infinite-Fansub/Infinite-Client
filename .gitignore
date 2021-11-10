@@ -5,3 +5,5 @@ todo.md
 old
 dist
 .DS_Store
+redis
+json

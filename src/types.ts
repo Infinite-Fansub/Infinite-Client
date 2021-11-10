@@ -1,4 +1,4 @@
-import { CommandInteraction, ClientEvents, ReplyMessageOptions, Message } from "discord.js";
+import { CommandInteraction, ClientOptions, ReplyMessageOptions, Message } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 
 export type SlashCommandExecute = (interaction: CommandInteraction) => Promise<string | ReplyMessageOptions | void> | ReplyMessageOptions | string | void;
@@ -25,6 +25,13 @@ export interface EventOptions {
     type: "on" | "once";
     enabled: boolean;
 }
+
+export interface IClientOptions extends ClientOptions {
+    useDatabase: boolean,
+    databaseType?: DatabaseTypes;
+}
+
+export type DatabaseTypes = "json" | "mongo"//| "redis"
 
 export const Command = (cmd: ISlashCommand): ISlashCommand => cmd;
 
