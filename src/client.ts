@@ -18,8 +18,8 @@ export default class InfiniteClient extends Client {
     constructor(token: string, options: IClientOptions) {
         super(options);
         this.useDatabase = options.useDatabase
-        if (!this.useDatabase) this.databaseType = undefined
-        else this.databaseType = options.databaseType
+        this.typeDb(options)
+
         this.token = token
         this.djsRest = new REST({ version: "9" }).setToken(this.token);
         this.prefix = "!";
@@ -84,6 +84,15 @@ export default class InfiniteClient extends Client {
 
     public addEvents(path: string) {
         this.handler = new Handler(this, { events: path })
+    }
+
+    private typeDb(options: IClientOptions) {
+        if (!this.useDatabase) this.databaseType = undefined
+        else this.databaseType = options.databaseType
+    }
+
+    public get database(): DatabaseTypes | undefined {
+        return this.databaseType
     }
 
     public async start(): Promise<string> {
