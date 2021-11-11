@@ -1,11 +1,17 @@
 import InfiniteClient from "../client";
+import { DirectoryTypes } from "../types";
 import recursiveRead from "./recursive-read";
 
 export default class Handler {
 
-    constructor(public client: InfiniteClient, public dirs: { commands?: string, slashCommands?: string, events?: string }) { }
+    constructor(public client: InfiniteClient, public dirs?: DirectoryTypes) { }
 
-    public async loadCommands(dir: string = this.dirs.commands!) {
+    public addDirs(dirs: DirectoryTypes) {
+        if (!dirs) this.dirs = dirs;
+        else throw new Error("`dirs` is already defined, and overwrite option is not implemented yet")
+    }
+
+    public async loadCommands(dir: string = this.dirs?.commands!) {
         recursiveRead(dir, (err, result) => {
             if (err) throw err;
             result?.forEach(async (path) => {
@@ -15,7 +21,7 @@ export default class Handler {
         })
     }
 
-    public async loadSlashCommands(dir: string = this.dirs.slashCommands!) {
+    public async loadSlashCommands(dir: string = this.dirs?.slashCommands!) {
         recursiveRead(dir, (err, result) => {
             if (err) throw err;
             result?.forEach(async (path) => {
@@ -25,7 +31,7 @@ export default class Handler {
         })
     }
 
-    public async loadEvents(dir: string = this.dirs.events!) {
+    public async loadEvents(dir: string = this.dirs?.events!) {
         recursiveRead(dir, (err, result) => {
             if (err) throw err;
             result?.forEach(async (path) => {

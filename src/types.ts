@@ -31,6 +31,12 @@ export interface IClientOptions extends ClientOptions {
     databaseType?: DatabaseTypes;
 }
 
+export interface DirectoryTypes {
+    commands?: string,
+    slashCommands?: string,
+    events?: string
+}
+
 export type DatabaseTypes = "json" | "mongo"//| "redis"
 
 export const Command = (cmd: ISlashCommand): ISlashCommand => cmd;

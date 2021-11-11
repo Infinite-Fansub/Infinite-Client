@@ -13,7 +13,7 @@ export default class InfiniteClient extends Client {
     public commands: Collection<string, ICommand> = new Collection();
     public slashCommands: Collection<string, ISlashCommand> = new Collection();
     public events: Collection<string, EventOptions> = new Collection();
-    public handler?: Handler;
+    public handler: Handler = new Handler(this);
 
     constructor(token: string, options: IClientOptions) {
         super(options);
@@ -75,15 +75,15 @@ export default class InfiniteClient extends Client {
     // }
 
     public addCommands(path: string) {
-        this.handler = new Handler(this, { commands: path })
+        this.handler?.addDirs({ commands: path })
     }
 
     public addSlashCommands(path: string) {
-        this.handler = new Handler(this, { slashCommands: path })
+        this.handler?.addDirs({ slashCommands: path })
     }
 
     public addEvents(path: string) {
-        this.handler = new Handler(this, { events: path })
+        this.handler?.addDirs({ events: path })
     }
 
     private typeDb(options: IClientOptions) {
