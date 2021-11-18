@@ -1,18 +1,11 @@
-import InfiniteClient from "../client";
-import { DirectoryTypes } from "../types";
+import InfiniteClient from "../bot-2";
 import recursiveRead from "./recursive-read";
 
 export default class Handler {
 
-    constructor(public client: InfiniteClient, public dirs: DirectoryTypes = {}) { }
+    constructor(public client: InfiniteClient, public dirs: { commands?: string, slashCommands?: string, events?: string }) { }
 
-    public addDirs(dirs: DirectoryTypes) {
-        this.dirs.commands = dirs.commands
-        this.dirs.slashCommands = dirs.slashCommands
-        this.dirs.events = dirs.events
-    }
-
-    public loadCommands(dir: string = this.dirs?.commands!) {
+    public async loadCommands(dir: string = this.dirs.commands!) {
         recursiveRead(dir, (err, result) => {
             if (err) throw err;
             result?.forEach(async (path) => {
@@ -22,7 +15,7 @@ export default class Handler {
         })
     }
 
-    public loadSlashCommands(dir: string = this.dirs?.slashCommands!) {
+    public async loadSlashCommands(dir: string = this.dirs.slashCommands!) {
         recursiveRead(dir, (err, result) => {
             if (err) throw err;
             result?.forEach(async (path) => {
@@ -32,7 +25,7 @@ export default class Handler {
         })
     }
 
-    public loadEvents(dir: string = this.dirs?.events!) {
+    public async loadEvents(dir: string = this.dirs.events!) {
         recursiveRead(dir, (err, result) => {
             if (err) throw err;
             result?.forEach(async (path) => {

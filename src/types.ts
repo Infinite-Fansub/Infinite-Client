@@ -1,9 +1,11 @@
-import { CommandInteraction, ClientOptions, ReplyMessageOptions, Message } from "discord.js";
+import { CommandInteraction, ClientOptions, ReplyMessageOptions, Message, ClientEvents } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 
 export type SlashCommandExecute = (interaction: CommandInteraction) => Promise<string | ReplyMessageOptions | void> | ReplyMessageOptions | string | void;
 
 export type CommandExecute = (message: Message, args: string[], command: string) => Promise<string | void> | string | void;
+
+export type EventExecute<E extends keyof ClientEvents> = (...args: ClientEvents[E]) => Promise<ClientEvents | void> | void
 
 export interface ISlashCommand {
     data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
@@ -19,16 +21,19 @@ export interface ICommand {
     execute: CommandExecute;
 }
 
-export interface EventOptions {
+export interface Event<E extends keyof ClientEvents> {
     name?: string;
-    event: string;
+    event: E;
     type: "on" | "once";
     enabled: boolean;
+    run: EventExecute<E>;
 }
 
 export interface IClientOptions extends ClientOptions {
     useDatabase: boolean,
     databaseType?: DatabaseTypes;
+    dirs?: DirectoryTypes;
+    publishCommands?: "global" | "guild" | "both"
 }
 
 export interface DirectoryTypes {
@@ -38,7 +43,3 @@ export interface DirectoryTypes {
 }
 
 export type DatabaseTypes = "json" | "mongo"//| "redis"
-
-export const Command = (cmd: ISlashCommand): ISlashCommand => cmd;
-
-export const Event = (event: EventOptions): EventOptions => event;
