@@ -43,3 +43,5 @@ export interface DirectoryTypes {
 }
 
 export type DatabaseTypes = "json" | "mongo"//| "redis"
+
+export type UserTag = `#${number}`
