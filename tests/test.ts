@@ -9,9 +9,6 @@ const client = new InfiniteClient(token, {
     databaseType: "mongo",
     dirs: {
         slashCommands: join(__dirname, "./commands"),
+        events: join(__dirname, "./events")
     }
-})
-client.once("ready", async () => {
-    process.stdout.write(`${client.user?.username}`)
-
 })
