@@ -84,7 +84,7 @@ export default {
 ```
 
 ## Creating slash commands
-To create slash commands we will use the discord.js builders together with our handler, to install discord.js builders use `npm i @discordjs/builders`.\
+To create slash commands we will use the discord.js builders together with our handler.\
 Now create the slash commands folder and a `.ts` file inside, the way that slash commands are handled are pretty similar to the ones suggested on the discord.js guide
 ```ts
 // import the oficial djs builder
