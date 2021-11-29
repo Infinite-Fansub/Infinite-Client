@@ -4,8 +4,8 @@
   "description": "The main core for all infinite bots",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node ./tests/test.ts",
-    "color": "ts-node ./src/utils/color-manager.ts"
+    "test": "ts-node ./examples/basic-bot/test.ts",
+    "build": "tsc"
   },
   "author": "DidaS",
   "license": "ISC",
