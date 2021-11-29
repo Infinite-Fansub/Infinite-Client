@@ -2,12 +2,12 @@
 
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed } from "discord.js";
-import { ISlashCommand } from "../../../src/types";
+import { SlashCommandExecute } from "../../../src/types";
 import choices from "../utils/choices";
 
 import NekoClient from "nekos.life";
 
-export default {
+export default SlashCommandExecute({
     data: new SlashCommandBuilder()
         .setName("hentai")
         .setDescription("troll")
@@ -30,4 +30,4 @@ export default {
 
         interaction.reply({ embeds: [embed] })
     }
-} as ISlashCommand
+})

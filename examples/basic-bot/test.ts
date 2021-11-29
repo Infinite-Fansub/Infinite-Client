@@ -2,7 +2,7 @@ import InfiniteClient from "../../src/client";
 import { token } from "../../config.json";
 import { join } from "path"
 
-const client = new InfiniteClient(token, {
+new InfiniteClient(token, {
     intents: 32511,
     partials: ['USER', 'REACTION', 'MESSAGE', 'GUILD_MEMBER', 'CHANNEL'],
     useDatabase: true,
