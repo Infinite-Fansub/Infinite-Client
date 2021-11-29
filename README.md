@@ -114,27 +114,3 @@ export default {
     }
 } as ICommand
 ```
-
-## Alternative way for types
-Instead of doing `export default { ... } as ICommand` you can simply do `export default ICommand({ ... })`.\
-This works for both commands and events.
-```ts
-export default Event<"ready">({
-    event: "ready",
-    type: "once",
-    run: async (client) => {
-        console.log(`${client.user?.username} is Ready`)
-    }
-})
-
-// or 
-
-export default ISlashCommand({
-    data: new SlashCommandBuilder()
-        .setName("ping")
-        .setDescription("Replies with pong!"),
-    execute: async (interaction) => {
-        interaction.reply("Pong!")
-    }
-})
-```
