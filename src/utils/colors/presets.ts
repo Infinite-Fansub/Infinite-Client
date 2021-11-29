@@ -1,5 +1,4 @@
-import { Color, ColorSpace, DirectGradient, JoinedGradient, colorConsole, Interpolation } from "colours.js";
-
+import { Color, ColorSpace, DirectGradient, JoinedGradient, colorConsole, Interpolation } from "colours.js"
 
 export function fire(message: string, isBackground: boolean = false, inverted: boolean = false) {
     const fire = new JoinedGradient(inverted ? Color.YELLOW : Color.RED,
