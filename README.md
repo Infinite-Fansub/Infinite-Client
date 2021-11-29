@@ -62,7 +62,6 @@ import { Event } from "infinite-client";
 export default {
     event: "ready",
     type: "once",
-    enabled: true,
     run: async (client) => {
         console.log(`${client.user?.username} is Ready`)
     }
@@ -80,7 +79,6 @@ export default {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Replys with pong!"),
-    enabled: true,
     execute: async (interaction) => {
         interaction.reply("Pong!")
     }
