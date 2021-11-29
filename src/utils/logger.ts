@@ -1,42 +1,44 @@
-import { Color } from "colours.js"
+import { Color, ColorSpace, DirectGradient, JoinedGradient, colorConsole, Interpolation } from "colours.js";
+import { DefaultColors, Emojis } from "../types";
+import { getCurrentMemoryHeap } from "./memory-heap"
 
-class logger {
-
+class Logger {
     private emoji: string = "🌌";
     private errorEmoji: string = "❌";
-    public language: string = "EN";
+    private defaultColors: DefaultColors = {
+        color: Color.fromHex("#fc036b"),
+        errorColor: Color.RED,
+        gradientPrimary: Color.fromHex("#0048ff"),
+        gradientSecondary: Color.fromHex("#c603fc")
+    };
 
-    constructor() {
-        this.color = colors.color("#fc036b");
-        this.gradPrim = colors.color("#0048ff");
-        this.gradLast = colors.color("#c603fc");
-        this.errorColor = colors.red;
-    }
-    setColor(color) {
-        return this.color = color
-    }
-    setEmoji(emoji: string) {
-        return this.emoji = emoji
-    }
-    time() {
-        return colors.text(colors.text(`[${new Date().toLocaleTimeString()}]`, colors.white, true), colors.black)
+    setEmojis(emojis: Emojis) {
+        if (emojis.emoji) this.emoji = emojis.emoji;
+        if (emojis.errorEmoji) this.errorEmoji = emojis.errorEmoji;
     };
-    defaultPrint(log: string, mem = false) {
-        if (mem) {
-            console.log(`${colors.customGrad(memory(), this.gradPrim, this.gradLast, colors.rgb, colors.cubic)} ${this.time()} ${this.emoji} ${colors.customGrad(log, this.gradLast, this.gradPrim, colors.rgb, colors.cubic)} ${colors.reset}`)
-        } else {
-            console.log(`${this.time()} ${this.emoji} ${colors.text(log, this.color)}`)
-        }
 
+    date() {
+        return colorConsole.uniform(colorConsole.uniform(`[${new Date().toLocaleTimeString()}]`, Color.WHITE, true), Color.BLACK)
     };
-    costumPrint(log: string) {
-        return console.log(log)
+
+    defaultPrint(log: string, showMemory: boolean = false) {
+        const forwardsGradient = new DirectGradient(this.defaultColors.gradientPrimary, this.defaultColors.gradientSecondary, ColorSpace.RGB, Interpolation.cubic)
+        const backwardsGradient = new DirectGradient(this.defaultColors.gradientSecondary, this.defaultColors.gradientPrimary, ColorSpace.RGB, Interpolation.cubic)
+
+        return showMemory
+            ? console.log(`${colorConsole.gradient(getCurrentMemoryHeap(), forwardsGradient)} ${this.date()} ${this.emoji} ${colorConsole.gradient(log, backwardsGradient)}`)
+            : console.log(`${this.date()} ${this.emoji} ${colorConsole.uniform(log, this.defaultColors.color)}`)
     };
-    error(log: string, mem = true) {
-        if (mem) {
-            console.error(`${colors.text(memory(), this.errorColor)} ${this.time()} ${this.errorEmoji} ${colors.text(log, this.errorColor)}`)
-        } else {
-            console.error(`${this.time()} ${this.errorEmoji} ${colors.text(log, this.errorColor)}`)
-        }
-    };
+
+    error(log: string, showMemory: boolean = false) {
+        return showMemory
+            ? console.error(`${colorConsole.uniform(getCurrentMemoryHeap(), this.defaultColors.errorColor)} ${this.date()} ${this.errorEmoji} ${colorConsole.uniform(log, this.defaultColors.errorColor)}`)
+            : console.error(`${this.date()} ${this.errorEmoji} ${colorConsole.uniform(log, this.defaultColors.errorColor)}`)
+    }
 }
+
+const log = new Logger()
+log.defaultPrint("Try me bitch", true)
+log.defaultPrint("Try me bitch")
+log.error("Fail bitch", true)
+log.error("Fail bitch")
