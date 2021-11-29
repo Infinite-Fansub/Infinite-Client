@@ -1,5 +1,5 @@
-import InfiniteClient from "../src/client";
-import { token } from "../config.json";
+import InfiniteClient from "../../src/client";
+import { token } from "../../config.json";
 import { join } from "path"
 
 const client = new InfiniteClient(token, {

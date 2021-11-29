@@ -3,7 +3,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed } from "discord.js";
 import { ISlashCommand } from "../../../src/types";
-import choices from "../../utils/choices";
+import choices from "../utils/choices";
 
 import NekoClient from "nekos.life";
 
