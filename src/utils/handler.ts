@@ -1,4 +1,4 @@
-import InfiniteClient from "../client";
+import { InfiniteClient } from "../client";
 import { DirectoryTypes } from "../types";
 import recursiveRead from "./recursive-read";
 

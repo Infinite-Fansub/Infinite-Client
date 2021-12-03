@@ -4,7 +4,7 @@ import Handler from "./utils/handler";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 
-export default class InfiniteClient extends Client {
+export class InfiniteClient extends Client {
 
     private djsRest: REST;
     declare public options: IClientOptions;

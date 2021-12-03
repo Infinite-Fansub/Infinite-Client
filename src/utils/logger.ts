@@ -35,9 +35,3 @@ export default class Logger {
             : console.error(`${this.date()} ${this.errorEmoji} ${colorConsole.uniform(log, this.defaultColors.errorColor)}`)
     }
 }
-
-const log = new Logger()
-log.defaultPrint("Default showing memory", true)
-log.defaultPrint("Default not showing memory")
-log.error("Error with memory", true)
-log.error("Error without memory")
