@@ -1,4 +1,4 @@
-import { Event } from "../../../src/types";
+import { Event } from "../../../src/index";
 
 export default {
     name: "example",

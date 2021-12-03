@@ -1,4 +1,4 @@
-import InfiniteClient from "../../src/client";
+import { InfiniteClient } from "../../src/index";
 import { token } from "../../config.json";
 import { join } from "path"
 
