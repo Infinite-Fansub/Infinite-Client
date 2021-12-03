@@ -3,7 +3,7 @@ import { DefaultColors, Emojis } from "../types";
 import { getCurrentMemoryHeap } from "./memory-heap";
 import { InfiniteGradient } from "./colors/infinite"
 
-class Logger {
+export default class Logger {
     private emoji: string = "💫";
     private errorEmoji: string = "❌";
     private defaultColors: DefaultColors = {
