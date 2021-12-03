@@ -1,5 +1,5 @@
 import { Client, Collection, Interaction, Message } from "discord.js";
-import { EventOptions, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from "./types";
+import { Event, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from "./types";
 import Handler from "./utils/handler";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
@@ -7,21 +7,31 @@ import { Routes } from "discord-api-types/v9";
 export default class InfiniteClient extends Client {
 
     private djsRest: REST;
-    private databaseType: DatabaseTypes | undefined;
-    private useDatabase: boolean;
+    declare public options: IClientOptions;
     public prefix: string;
     public commands: Collection<string, ICommand> = new Collection();
     public slashCommands: Collection<string, ISlashCommand> = new Collection();
-    public events: Collection<string, EventOptions> = new Collection();
+    public events: Collection<string, Event<any>> = new Collection();
     public handler: Handler = new Handler(this);
 
     constructor(token: string, options: IClientOptions) {
         super(options);
-        this.useDatabase = options.useDatabase
-        this.typeDb(options)
-
-        this.token = token
+        this.token = token;
+        this.login(this.token);
         this.djsRest = new REST({ version: "9" }).setToken(this.token);
+
+        this.handler?.addDirs({
+            commands: this.options.dirs?.commands,
+            slashCommands: this.options.dirs?.slashCommands,
+            events: this.options.dirs?.events
+        });
+
+
+        this.handler.dirs.slashCommands && this.handler.loadSlashCommands();
+        this.handler.dirs.commands && this.handler.loadCommands();
+        this.handler.dirs.events && this.handler.loadEvents();
+        this.registerSlashCommands()
+
         this.prefix = "!";
 
         this.on("interactionCreate", async (interaction) => this.onInteraction(interaction));
@@ -59,47 +69,32 @@ export default class InfiniteClient extends Client {
         }
     }
 
-    /*
-    * @TODO: get the client id and guild id without needing the config.json
-    */
+    private async registerSlashCommands() {
+        try {
+            const guild = await this.guilds.fetch()
+            guild.map(async (g) => {
+                if (!this.user) return;
+                const cmdJson = this.slashCommands.map((command) => command.data).map((command) => command.toJSON())
+                await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, g.id), { body: cmdJson })
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
-    // private async registerSlashCommands() {
-    //     const cmdJson = this.slashCommands.map((command) => command.data)//.map((command) => command.toJSON())
-    //     try {
-    //         await this.djsRest.put(Routes.applicationGuildCommands(id, guild), { body: cmdJson })
-    //         console.log(this.slashCommands.map((command) => command.data))
-    //         console.log(cmdJson)
-    //     } catch (err) {
-    //         console.error(err)
-    //     }
-    // }
 
     public addCommands(path: string) {
         this.handler?.addDirs({ commands: path })
+        this.handler.loadCommands()
     }
 
     public addSlashCommands(path: string) {
         this.handler?.addDirs({ slashCommands: path })
+        this.handler.loadSlashCommands()
     }
 
     public addEvents(path: string) {
         this.handler?.addDirs({ events: path })
+        this.handler.loadEvents()
     }
-
-    private typeDb(options: IClientOptions) {
-        if (!this.useDatabase) this.databaseType = undefined
-        else this.databaseType = options.databaseType
-    }
-
-    public get database(): DatabaseTypes | undefined {
-        return this.databaseType
-    }
-
-    public async start(): Promise<string> {
-        if (!this.token) throw new Error("A token was not provided");
-        await this.handler?.loadSlashCommands();
-        // await this.registerSlashCommands();
-        return await this.login(this.token);
-    }
-
 }

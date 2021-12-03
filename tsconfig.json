@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "ESNext",
         "module": "commonjs",
+        "rootDir": "src",
         "outDir": "dist",
         "strict": true,
         "importHelpers": true,
@@ -17,7 +18,8 @@
         "resolveJsonModule": true,
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
-        "allowJs": true
+        "allowJs": true,
+        "declaration": true
     },
     "include": [
         "src/**/*"
