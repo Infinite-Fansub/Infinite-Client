@@ -43,7 +43,7 @@ export class InfiniteClient extends Client {
         const command = this.slashCommands.get(interaction.commandName);
         if (!command) return;
         try {
-            if (!command.enabled) return interaction.reply("Command Disabled");
+            if (command.enabled === false) return interaction.reply("Command Disabled");
             await command.execute(interaction);
         } catch (err) {
             console.error(err);
@@ -60,8 +60,9 @@ export class InfiniteClient extends Client {
 
             if (!this.commands.has(cmd)) return;
             const command = this.commands.get(cmd);
+            if (!command) return;
             try {
-                if (!command?.enabled) return;
+                if (command?.enabled === false) return;
                 await command.execute(message, args, cmd)
             } catch (err) {
                 console.error(err);

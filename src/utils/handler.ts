@@ -34,7 +34,7 @@ export default class Handler {
                 const event = (await import(path)).default;
                 this.client.events.set(event.event, event)
                 this.client[event.type as "on" | "once"](event.event, (...args) => {
-                    if (!event.enabled) return;
+                    if (event.enabled === false) return;
                     event.run(...args)
                 })
             })
