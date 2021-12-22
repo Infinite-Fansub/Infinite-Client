@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream:examples/basic-bot/test.ts
-import InfiniteClient from "../../src/client";
-import { token } from "../../config.json";
-=======
 import { InfiniteClient } from "../../src/index";
 import { token, mongoPath } from "../../config.json";
->>>>>>> Stashed changes:examples/basic-bot/basic-bot.ts
 import { join } from "path"
 
 new InfiniteClient(token, {
