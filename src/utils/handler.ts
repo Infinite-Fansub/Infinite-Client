@@ -16,7 +16,7 @@ export default class Handler {
         recursiveRead(dir)
             .forEach(async (path) => {
                 const command = (await import(path)).default;
-                this.client.commands.set(command.data.name, command)
+                this.client.commands.set(command.name, command)
             })
     }
 
