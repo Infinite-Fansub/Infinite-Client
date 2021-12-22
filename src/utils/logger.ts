@@ -3,7 +3,7 @@ import { DefaultColors, Emojis } from "../types";
 import { getCurrentMemoryHeap } from "./memory-heap";
 import { InfiniteGradient } from "./colors/infinite"
 
-export class Logger {
+class Logger {
     private emoji: string = "💫";
     private errorEmoji: string = "❌";
     private defaultColors: DefaultColors = {
@@ -35,3 +35,5 @@ export class Logger {
             : console.error(`${this.date()} ${this.errorEmoji} ${colorConsole.uniform(log, this.defaultColors.errorColor)}`)
     }
 }
+
+export const logger = new Logger()

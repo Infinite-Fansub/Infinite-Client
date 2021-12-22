@@ -58,13 +58,3 @@ export function DidasToMarija(log: string, inverted: boolean = false) {
 
     return inverted ? `${colorConsole.gradient(firstHalf, second)} ${colorConsole.gradient(secondHalf, first)}` : `${colorConsole.gradient(firstHalf, first)} ${colorConsole.gradient(secondHalf, second)}`
 };
-
-import data from "./EN"
-
-const t = data.login
-console.log(colorConsole.gradient(t, InfiniteGradient()))
-console.log(colorConsole.gradient(t, BlueWave()))
-console.log(colorConsole.gradient(t, PinkToPurple()))
-console.log(colorConsole.gradient(t, GreenToRed()))
-console.log(DidasToMarija(t))
-console.log(DidasToMarija(t, true))
