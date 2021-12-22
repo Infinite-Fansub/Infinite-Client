@@ -1,11 +1,10 @@
 import { CommandInteraction, ClientOptions, ReplyMessageOptions, Message, ClientEvents } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Color } from "colours.js";
-import { InfiniteClient } from ".";
 
 export type SlashCommandExecute = (interaction: CommandInteraction) => Promise<string | ReplyMessageOptions | void> | ReplyMessageOptions | string | void;
 
-export type CommandExecute = (message: Message, args: string[], client: InfiniteClient, command: string) => Promise<string | void> | string | void;
+export type CommandExecute = (message: Message, args: string[], command: string) => Promise<string | void> | string | void;
 
 export type EventExecute<E extends keyof IClientEvents> = (...args: IClientEvents[E]) => Promise<IClientEvents | void> | void;
 
