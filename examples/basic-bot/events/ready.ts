@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-import { Event } from "../../../src/types";
-=======
 import { Event } from "../../../src";
->>>>>>> Stashed changes
 
 export default {
     name: "example",
