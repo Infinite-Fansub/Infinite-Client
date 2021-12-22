@@ -22,7 +22,7 @@ class Logger {
         return colorConsole.uniform(colorConsole.uniform(`[${new Date().toLocaleTimeString()}]`, Color.WHITE, true), Color.BLACK)
     };
 
-    public InfinitePrint(log: string, showMemory: boolean = true): void {
+    public infinitePrint(log: string, showMemory: boolean = true): void {
 
         return showMemory
             ? console.log(`${colorConsole.gradient(getCurrentMemoryHeap(), InfiniteGradient())} ${this.date()} ${this.emoji} ${colorConsole.gradient(log, InfiniteGradient(true))}`)
