@@ -41,20 +41,17 @@ export function GreenToRed(inverted: boolean = false): DirectGradient {
 
 export function DidasToMarija(log: string, inverted: boolean = false) {
     const { firstHalf, secondHalf } = divideString(log)
-    // @Not-Implemented: inverted
+
     const first = new JoinedGradient(inverted ? fromHex("#3300FF") : fromHex("#FF00EF"), {
         color: inverted ? fromHex("#FF00EF") : fromHex("#3300FF"),
         space: ColorSpace.HSI,
         interpolation: inverted ? Interpolation.dec_quadratic : Interpolation.inc_quadratic
     });
-
     const second = new JoinedGradient(inverted ? fromHex("#00E5FF") : fromHex("#5500FF"), {
         color: inverted ? fromHex("#5500FF") : fromHex("#00E5FF"),
         space: ColorSpace.HSI,
         interpolation: inverted ? Interpolation.inc_quadratic : Interpolation.dec_quadratic
-    })
-
-
+    });
 
     return inverted ? `${colorConsole.gradient(firstHalf, second)} ${colorConsole.gradient(secondHalf, first)}` : `${colorConsole.gradient(firstHalf, first)} ${colorConsole.gradient(secondHalf, second)}`
 };
