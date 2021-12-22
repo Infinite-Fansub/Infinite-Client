@@ -1,22 +1,70 @@
-import { Color, ColorSpace, DirectGradient, JoinedGradient, Interpolation } from "colours.js"
+import { Color, ColorSpace, DirectGradient, JoinedGradient, Interpolation, colorConsole } from "colours.js";
+import { divideString } from "./string.divide";
+const { fromHex } = Color;
 
 export function InfiniteGradient(inverted: boolean = false): DirectGradient {
-    const primary = Color.fromHex("#0048FF");
-    const secondary = Color.fromHex("#C603FC");
-
-    return new DirectGradient(inverted ? secondary : primary, inverted ? primary : secondary, ColorSpace.RGB, Interpolation.cubic);
-}
+    return new DirectGradient(
+        inverted ? fromHex("#C603FC") : fromHex("#0048FF"),
+        inverted ? fromHex("#0048FF") : fromHex("#C603FC"),
+        ColorSpace.RGB,
+        Interpolation.cubic
+    );
+};
 
 export function BlueWave(inverted: boolean = false): DirectGradient {
-    const blue = Color.fromHex("#0000FF");
-    const lightBlue = Color.fromHex("#00B3FF");
-
-    return new DirectGradient(inverted ? lightBlue : blue, inverted ? blue : lightBlue, ColorSpace.HSL, Interpolation.linear, true);
-}
+    return new DirectGradient(
+        inverted ? fromHex("#00B3FF") : fromHex("#0000FF"),
+        inverted ? fromHex("#0000FF") : fromHex("#00B3FF"),
+        ColorSpace.RGB,
+        Interpolation.dec_quadratic
+    );
+};
 
 export function PinkToPurple(inverted: boolean = false): DirectGradient {
-    const pink = Color.fromHex("#FF00EF");
-    const purple = Color.fromHex("#B300FF");
+    return new DirectGradient(
+        inverted ? fromHex("#B300FF") : fromHex("#FF00EF"),
+        inverted ? fromHex("#FF00EF") : fromHex("#B300FF"),
+        ColorSpace.RGB,
+        Interpolation.dec_quadratic,
+        true
+    );
+};
 
-    return new DirectGradient(inverted ? purple : pink, inverted ? pink : purple, ColorSpace.HSV, Interpolation.cubic, true);
-}
+export function GreenToRed(inverted: boolean = false): DirectGradient {
+    return new DirectGradient(
+        inverted ? Color.RED : Color.GREEN,
+        inverted ? Color.GREEN : Color.RED,
+        ColorSpace.HSV,
+        Interpolation.cubic
+    );
+};
+
+export function DidasToMarija(log: string, inverted: boolean = false) {
+    const { firstHalf, secondHalf } = divideString(log)
+    // @Not-Implemented: inverted
+    const first = new JoinedGradient(inverted ? fromHex("#3300FF") : fromHex("#FF00EF"), {
+        color: inverted ? fromHex("#FF00EF") : fromHex("#3300FF"),
+        space: ColorSpace.HSI,
+        interpolation: inverted ? Interpolation.dec_quadratic : Interpolation.inc_quadratic
+    });
+
+    const second = new JoinedGradient(inverted ? fromHex("#00E5FF") : fromHex("#5500FF"), {
+        color: inverted ? fromHex("#5500FF") : fromHex("#00E5FF"),
+        space: ColorSpace.HSI,
+        interpolation: inverted ? Interpolation.inc_quadratic : Interpolation.dec_quadratic
+    })
+
+
+
+    return inverted ? `${colorConsole.gradient(firstHalf, second)} ${colorConsole.gradient(secondHalf, first)}` : `${colorConsole.gradient(firstHalf, first)} ${colorConsole.gradient(secondHalf, second)}`
+};
+
+import data from "./EN"
+
+const t = data.login
+console.log(colorConsole.gradient(t, InfiniteGradient()))
+console.log(colorConsole.gradient(t, BlueWave()))
+console.log(colorConsole.gradient(t, PinkToPurple()))
+console.log(colorConsole.gradient(t, GreenToRed()))
+console.log(DidasToMarija(t))
+console.log(DidasToMarija(t, true))
