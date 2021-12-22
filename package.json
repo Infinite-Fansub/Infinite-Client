@@ -4,8 +4,9 @@
   "description": "The main core for all infinite bots",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node ./examples/basic-bot/test.ts",
-    "build": "tsc"
+    "dev": "ts-node ./src/client.ts",
+    "build": "tsc",
+    "test": "ts-node ./examples/basic-bot/basic-bot.ts"
   },
   "author": "DidaS",
   "license": "ISC",

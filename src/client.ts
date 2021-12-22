@@ -3,6 +3,7 @@ import { Event, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from ".
 import Handler from "./utils/handler";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
+import { connect } from "mongoose";
 
 export default class InfiniteClient extends Client {
 
@@ -17,25 +18,52 @@ export default class InfiniteClient extends Client {
     constructor(token: string, options: IClientOptions) {
         super(options);
         this.token = token;
-        this.login(this.token);
+        this.login(this.token).then(() => {
+            this.handler?.addDirs({
+                commands: this.options.dirs?.commands,
+                slashCommands: this.options.dirs?.slashCommands,
+                events: this.options.dirs?.events
+            });
+
+            this.handler.dirs.slashCommands && this.handler.loadSlashCommands();
+            this.handler.dirs.commands && this.handler.loadCommands();
+            this.handler.dirs.events && this.handler.loadEvents();
+            this.registerSlashCommands()
+        })
+
         this.djsRest = new REST({ version: "9" }).setToken(this.token);
-
-        this.handler?.addDirs({
-            commands: this.options.dirs?.commands,
-            slashCommands: this.options.dirs?.slashCommands,
-            events: this.options.dirs?.events
-        });
-
-
-        this.handler.dirs.slashCommands && this.handler.loadSlashCommands();
-        this.handler.dirs.commands && this.handler.loadCommands();
-        this.handler.dirs.events && this.handler.loadEvents();
-        this.registerSlashCommands()
-
         this.prefix = "!";
 
         this.on("interactionCreate", async (interaction) => this.onInteraction(interaction));
         this.on("messageCreate", async (message) => this.onMessage(message));
+    }
+
+    private buildDB(): void {
+        if (!this.options.useDatabase) return console.error("Some options might not work without a database")
+
+        const type = typeof this.options.databaseType === "object"
+            ? this.options.databaseType.type
+            : this.options.databaseType
+
+        switch (type) {
+            case "mongo":
+                this.mongoHandler()
+                break
+            case "json":
+                this.jsonHandler()
+                break
+            default:
+                this.jsonHandler()
+        }
+    }
+
+    private async mongoHandler(): Promise<void> {
+        if (typeof this.options.databaseType !== "object") return;
+        await connect(this.options.databaseType.mongoPath)
+    }
+
+    private jsonHandler(): void {
+
     }
 
     private async onInteraction(interaction: Interaction) {
@@ -54,15 +82,20 @@ export default class InfiniteClient extends Client {
         if (message.author.bot || message.channel.type == "DM") return;
         if (message.content.startsWith(this.prefix)) {
             if (message.content.trim().split(/ /g)[0].length <= this.prefix.length) return;
-            const args = message.content.slice(this.prefix.length).trim().split(/ /g);
+            const args = message.content.replace(/(\r\n|\n|\r)/g, " ").slice(this.prefix.length).trim().split(/ /g);
             const cmd = args.shift()?.toLowerCase();
             if (typeof cmd != "string") return console.log(`CMD is not a string\nCMD:\n${cmd}`);
 
             if (!this.commands.has(cmd)) return;
             const command = this.commands.get(cmd);
             try {
+<<<<<<< Updated upstream
                 if (!command?.enabled) return;
                 await command.execute(message, args, cmd)
+=======
+                if (command?.enabled === false) return;
+                await command.execute(message, args, this, cmd)
+>>>>>>> Stashed changes
             } catch (err) {
                 console.error(err);
             }
@@ -73,15 +106,27 @@ export default class InfiniteClient extends Client {
         try {
             const guild = await this.guilds.fetch()
             guild.map(async (g) => {
-                if (!this.user) return;
+                if (!this.user) throw new Error("Client is not logged in");
                 const cmdJson = this.slashCommands.map((command) => command.data).map((command) => command.toJSON())
                 await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, g.id), { body: cmdJson })
+                this.emit("loadedSlash", cmdJson)
             })
         } catch (err) {
             console.error(err)
         }
     }
 
+    public async deleteSlashCommands() {
+        try {
+            const guild = await this.guilds.fetch()
+            guild.map(async (g) => {
+                if (!this.user) throw new Error("Client is not logged in");
+                await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, g.id), { body: [] })
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     public addCommands(path: string) {
         this.handler?.addDirs({ commands: path })
