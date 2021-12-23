@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed } from "discord.js";
 import { ISlashCommand } from "../../../src";
 
 export default {
@@ -7,7 +6,6 @@ export default {
         .setName("ping")
         .setDescription("Replys with pong!"),
     execute: async (interaction) => {
-        const embed = new MessageEmbed().setImage(interaction.user.avatarURL())
-        interaction.reply({ embeds: [embed] })
+        interaction.reply("Pong!")
     }
 } as ISlashCommand
