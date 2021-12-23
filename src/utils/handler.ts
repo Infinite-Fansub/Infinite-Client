@@ -21,6 +21,8 @@ export default class Handler {
     }
 
     public loadSlashCommands(dir: string = this.dirs?.slashCommands!) {
+
+        // TODO: Get per guild, guilds and global working and add the folder to the data so it can be read with the event handler
         recursiveRead(dir)
             .forEach(async (path) => {
                 const command = (await import(path)).default;

@@ -24,7 +24,8 @@ export interface ICommand {
 };
 
 export interface IClientEvents extends ClientEvents {
-    loadedSlash: [commands: ChatInputApplicationCommand[]]
+    loadedSlash: [commands: ChatInputApplicationCommand[]];
+    deletedSlash: [void]
 }
 
 export interface Event<E extends keyof IClientEvents> {

@@ -9,3 +9,4 @@ redis
 json
 test
 commands
+.npmignore

@@ -113,11 +113,14 @@ export class InfiniteClient extends Client {
     }
 
     public async deleteSlashCommands() {
+
+        // TODO: Make it possible to delete only specific commands
         try {
             const guild = await this.guilds.fetch()
             guild.map(async (g) => {
                 if (!this.user) throw new Error("Client is not logged in");
                 await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, g.id), { body: [] })
+                this.emit("deletedSlash")
             })
         } catch (err) {
             console.error(err)

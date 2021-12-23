@@ -1,4 +1,4 @@
-import { Event } from "../../../src";
+import { Event, logger } from "../../../src";
 
 export default {
     name: "example",
@@ -6,7 +6,7 @@ export default {
     type: "once",
     run: (commands) => {
         commands.forEach((cmd) => {
-            console.log(cmd.name)
+            logger.defaultPrint(`Loaded ${cmd.name} (/) command`, true)
         });
     }
 } as Event<"loadedSlash">
