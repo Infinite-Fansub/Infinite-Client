@@ -1,4 +1,4 @@
-[![Node.js Package](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/publish.yml/badge.svg)](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/publish.yml)
+[![Git Package](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/github-publish.yml/badge.svg)](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/github-publish.yml)
 
 # JavaScript
 
