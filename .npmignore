@@ -2,10 +2,13 @@ config.json
 node_modules
 todo.md
 old
-dist
+src
 .DS_Store
 redis
 json
 test
 commands
+examples
+tsconfig.json
+.gitignore
 tsconfig.tsbuildinfo
