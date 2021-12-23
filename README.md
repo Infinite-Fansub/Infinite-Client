@@ -218,4 +218,4 @@ export default {
 } as ICommand
 ```
 
-###[Discord](https://discord.gg/ZpCV9Cd8YN)
+#### Our Discord server: [link](https://discord.gg/ZpCV9Cd8YN)
