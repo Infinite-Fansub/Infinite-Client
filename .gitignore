@@ -10,3 +10,4 @@ json
 test
 commands
 .npmignore
+tsconfig.tsbuildinfo
