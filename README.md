@@ -217,3 +217,5 @@ export default {
     }
 } as ICommand
 ```
+
+###[Discord](https://discord.gg/ZpCV9Cd8YN)
