@@ -1,3 +1,5 @@
+[![Node.js Package](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/publish.yml/badge.svg)](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/publish.yml)
+
 # JavaScript
 
 As this project has been primarily developed in and for TypeScript, a compiled JavaScript source has not been supplied. In order to fully make use of this project in plain JavaScript, the project must be first transpiled, or run in an environment which supports TypeScript execution.
