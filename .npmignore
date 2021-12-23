@@ -12,3 +12,4 @@ examples
 tsconfig.json
 .gitignore
 tsconfig.tsbuildinfo
+.github
