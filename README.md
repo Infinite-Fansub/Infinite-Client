@@ -1,5 +1,8 @@
 [![Git Package](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/github-publish.yml/badge.svg)](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/github-publish.yml)
 
+# Installation
+[![NPM](https://nodei.co/npm/infinite-client.png)](https://nodei.co/npm/infinite-client)
+
 # JavaScript
 
 ## Creating the bot
