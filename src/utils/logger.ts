@@ -1,4 +1,4 @@
-import { Color, colorConsole } from "colours.js";
+import { Color, colourConsole as colorConsole } from "colours.js";
 import { DefaultColors, Emojis } from "../types";
 import { getCurrentMemoryHeap } from "./memory-heap";
 import { InfiniteGradient } from "./colors/infinite"
