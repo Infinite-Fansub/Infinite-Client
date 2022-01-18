@@ -16,7 +16,7 @@
   "author": "DidaS",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.10.0",
+    "@discordjs/builders": "^0.11.0",
     "@discordjs/rest": "^0.2.0-canary.0",
     "colours.js": "^3.0.4",
     "discord-api-types": "^0.25.2",
