@@ -1,4 +1,4 @@
-import { Color, ColorSpace, DirectGradient, JoinedGradient, Interpolation, colorConsole } from "colours.js";
+import { Color, ColorSpace, DirectGradient, JoinedGradient, Interpolation, colourConsole as colorConsole } from "colours.js";
 import { divideString } from "./string.divide";
 const { fromHex } = Color;
 
