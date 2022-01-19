@@ -1,5 +1,5 @@
 import { Client, Collection, Interaction, Message } from "discord.js";
-import { Event, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from "./types";
+import { Event, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from "./typings/index";
 import Handler from "./utils/handler";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";

@@ -1,6 +1,6 @@
 export * from "./client";
 export * from "./utils/logger";
-export * from "./types";
+export * from "./typings/index";
 export * from "./utils/colors/infinite";
 export * from "./utils/colors/presets";
 export * from "./dbs/mongodb/schemas/guild-schema"

@@ -1,5 +1,5 @@
 import { InfiniteClient } from "../client";
-import { DirectoryTypes } from "../types";
+import { DirectoryTypes } from "../typings/index";
 import recursiveRead from "./recursive-read";
 
 export default class Handler {
