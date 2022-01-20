@@ -1,9 +1,9 @@
-import { CommandInteraction, ReplyMessageOptions, Message } from "discord.js";
+import { CommandInteraction, ReplyMessageOptions, Message, Client } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { GuildId } from "./general";
 
-export type SlashCommandExecute = (interaction: CommandInteraction) => Promise<string | ReplyMessageOptions | void> | ReplyMessageOptions | string | void;
-export type CommandExecute = (message: Message, args: string[], command: string) => Promise<string | void> | string | void;
+export type SlashCommandExecute = (interaction: CommandInteraction, client: Client) => Promise<string | ReplyMessageOptions | void> | ReplyMessageOptions | string | void;
+export type CommandExecute = (options: CommandArgs) => Promise<string | void> | string | void;
 
 export interface ISlashCommand {
     data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
@@ -19,6 +19,10 @@ export interface ICommand {
     enabled?: boolean;
     execute: CommandExecute;
 };
+
+export interface CommandArgs {
+    message: Message, args: string[], command: string, client: Client
+}
 
 export type Guild = GuildId | GuildId[] | "ALL";
 export type Post = "GLOBAL" | Guild;

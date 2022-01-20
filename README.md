@@ -102,7 +102,7 @@ The traditional approach for handling message based commands are supported; agai
 ```js
 module.exports = {
     name: "ping",
-    execute: async (message) => {
+    execute: async ({ message }) => {
         message.reply("Pong!")
     }
 }
@@ -215,7 +215,7 @@ import { ICommand } from "infinite-client";
 
 export default {
     name: "ping",
-    execute: async (message) => {
+    execute: async ({ message }) => {
         message.reply("Pong!")
     }
 } as ICommand

@@ -72,7 +72,7 @@ export class InfiniteClient extends Client {
         if (!command) return;
         try {
             if (command.enabled === false) return interaction.reply("Command Disabled");
-            await command.execute(interaction);
+            await command.execute(interaction, this);
         } catch (err) {
             console.error(err);
         }
@@ -91,7 +91,7 @@ export class InfiniteClient extends Client {
             if (!command) return;
             try {
                 if (command?.enabled === false) return;
-                await command.execute(message, args, cmd)
+                await command.execute({ message, args, command: cmd, client: this })
             } catch (err) {
                 console.error(err);
             }
