@@ -1,10 +1,11 @@
 import { ClientEvents } from "discord.js";
+import { InfiniteClient } from "../client";
 
 export type EventExecute<E extends keyof IClientEvents> = (...args: IClientEvents[E]) => Promise<IClientEvents | void> | void;
 
 export interface IClientEvents extends ClientEvents {
-    loadedSlash: [commands: ChatInputApplicationCommand[]];
-    deletedSlash: [void]
+    loadedSlash: [commands: ChatInputApplicationCommand[], client: InfiniteClient];
+    deletedSlash: [client: InfiniteClient]
 }
 
 export interface Event<E extends keyof IClientEvents> {
