@@ -11,12 +11,12 @@ new InfiniteClient(token, {
         slashCommands: join(__dirname, "./slashCommands"),
         events: join(__dirname, "./events")
     }
-}).on("ready", (client) => {
+}).once("ready", (client) => {
     client.user.setPresence({
         status: "dnd",
         activities: [
             {
-                name: "Hentai",
+                name: "Infinite",
                 type: "WATCHING"
             }
         ]
