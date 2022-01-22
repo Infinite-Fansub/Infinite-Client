@@ -3,9 +3,11 @@
 # Installation
 [![NPM](https://nodei.co/npm/infinite-client.png)](https://nodei.co/npm/infinite-client)
 
-# JavaScript
 
-## Creating the bot
+# Using the Library
+
+## Creating the initial client
+
 ```js
 // Import the client
 const { InfiniteClient } = require("infinite-client");
@@ -20,38 +22,20 @@ const { token, mongoPath } = require("./config.json");
 
 // Initialise the client passing the token and providing optional information.
 // Most intellisense systems should acknowledge and supply the available options.
-new InfiniteClient(token, {
+const client = new InfiniteClient(token, {
     intents: 32511, // 0b0111_1110_1111_1111
     useDatabase: true,
-    databaseType: { type: "mongo", mongoPath}
-});
-```
-
-## Adding commands & events
-
-There are two approaches for supplying commands and events:
-- Including as additional options used during construction.
-```js
-const client = new InfiniteClient(token, {
-    intents: 32511,
-    useDatabase: true,
     databaseType: { type: "mongo", mongoPath },
+    /* There are two approaches for supplying commands and events:
+    - Including as additional options used during construction. */
     dirs: {
         slashCommands: join(__dirname, "./slashCommands"),
         commands: join(__dirname, "./commands"),
         events: join(__dirname, "./events")
     }
 });
-```
-- Adding them later on in execution making use of the appropriate methods.
-```js
-const client = new InfiniteClient(token, {
-    intents: 32511,
-    useDatabase: true,
-    databaseType: { type: "mongo", mongoPath }
-});
 
-// using methods of the custom client to load the command & event folders
+// - Adding them later on in execution making use of the appropriate methods of the custom client to load the command & event folders
 client.addSlashCommands(join(__dirname, "./slashCommands"));
 client.addCommands(join(__dirname, "./commands"));
 client.addEvents(join(__dirname, "./events"));
@@ -66,9 +50,8 @@ client.once("ready", async () => {
     console.log(`${client.user?.username} is Ready`)
 })
 ```
-The alternative however, is by making use of the event handler type, included using the same approach as standard commands.\
-To do this create an events folder and add it like shown above, then create a TypeScript source file within.\
-Intellisense systems should also acknowledge and operate under this approach, as long as the generic type is supplied.
+The alternative however, is by making use of the event handler type included using the same approach as standard commands.\
+To do this create an events folder and add it like shown above, then create a JavaScript source file within.\
 ```js
 module.exports = {
     event: "ready",
@@ -80,8 +63,9 @@ module.exports = {
 ```
 
 ## Creating slash commands
+
 To create slash commands we will use the discord.js builders together with our handler.\
-Now create the slash commands folder and a `.js` file inside, the way that slash commands are handled are pretty similar to the ones suggested on the discord.js guide
+Now create the slash commands folder and a JavaScript file inside, the way that slash commands are handled are pretty similar to the ones suggested on the discord.js guide
 ```js
 // import the oficial djs builder
 const { SlashCommandBuilder } = require("@discordjs/builders");
@@ -98,6 +82,7 @@ module.exports = {
 ```
 
 ## Handling message commands
+
 The traditional approach for handling message based commands are supported; again the handler is pretty similar to the one suggested on the discord.js guide.
 ```js
 module.exports = {
@@ -108,117 +93,50 @@ module.exports = {
 }
 ```
 
-# TypeScript
+# Options
 
-## Creating the bot
-```ts
-// Import the client
-import { InfiniteClient } from "infinite-client";
+## Event Handler Options
+| Syntax    | Description                                                                                                                        |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `name`    | *Optional*: The name will only be used to find the command on the events Map                                                       |
+| `event`   | The event that you want to listen to. Example: `"ready"`, `"messageCreate"`                                                        |
+| `type`    | Type of listener, this being `on` or `once`                                                                                        |
+| `enabled` | *Optional*: If the event is enabled or not (usefull to handle per-guild events), if no value is provided it will default to `true` |
+| `run`     | Handle the event callback                                                                                                          |
 
-// Package included in the standard node.js library relating to file directories.
-// Used to maintain easy cross compatibility between operating systems.
-import { join } from "path";
+### Our custom events
+| Syntax         | Arguments                                                                                                 | Description                                                                     |
+| -------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `loadedSlash`  | commands: `RESTPostAPIApplicationCommandsJSONBody`, type: `"Global" \| "Guild"`, client: `InfiniteClient` | Emited when slash commands are loaded                                           |
+| `deletedSlash` | type: `"Global" \| "Guild"`, client: `Infinite Client`                                                    | Emited when slash commands are deleted using the `deleteSlashCommands` function |
 
-// We have a token and a path for mongodb stored in a local json file of the format *{ "token": "your-token", "mongoPath": "your-uri" }*
-// Alternative approaches may instead be used.
-import { token } from "./config.json";
+## SlashCommands Handler Options
+| Syntax        | Description                                                                                                                                                                                          |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`        | The slash command data to be sent to the api **We do not support raw json yet**                                                                                                                      |
+| `description` | The discription is only added to the Map and not shown on the data sent do the api, this is to make a `help` command easier to make                                                                  |
+| `Post`        | *Optional* Where the command will be posted, this can be the a guild id, an array of guild ids, `"ALL"` (All guilds the bot is in) or `"GLOBAL"`. If post is not provided it will default to `"ALL"` |
+| `enabled`     | *Optional*: If the command is enabled or not (usefull to handle per-guild commands), if no value is provided it will default to `true`                                                               |
+| `execute`     | Handle the interaction                                                                                                                                                                               |
 
-// Initialise the client passing the token and providing optional information.
-// Most intellisense systems should acknowledge and supply the available options.
-InfiniteClient(token, {
-    intents: 32511, // 0b0111_1110_1111_1111
-    useDatabase: true,
-    databaseType: { type: "mongo", mongoPath }
-});
-```
+### Arguments passed to the Handler
+| Argument      | Type                 |
+| ------------- | -------------------- |
+| `interaction` | `CommandInteraction` |
+| `client`      | `InfiniteClient`     |
 
-## Adding commands & events
+## Commands Handler Options
+| Syntax        | Description                                                                                                                            |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`        | The name of the command, this is how the command will be called (<prefix>commandName)                                                  |
+| `description` | The discription is only added to the Map and not shown on the data sent do the api, this is to make a `help` command easier to make    |
+| `enabled`     | *Optional*: If the command is enabled or not (usefull to handle per-guild commands), if no value is provided it will default to `true` |
+| `execute`     | Handle the command                                                                                                                     |
 
-There are two approaches for supplying commands and events:
-- Including as additional options used during construction.
-```ts
-const client = new InfiniteClient(token, {
-    intents: 32511,
-    useDatabase: true,
-    databaseType: { type: "mongo", mongoPath },
-    dirs: {
-        slashCommands: join(__dirname, "./slashCommands"),
-        commands: join(__dirname, "./commands"),
-        events: join(__dirname, "./events")
-    }
-});
-```
-- Adding them later on in execution making use of the appropriate methods.
-```ts
-const client = new InfiniteClient(token, {
-    intents: 32511,
-    useDatabase: true,
-    databaseType: { type: "mongo", mongoPath }
-});
-
-// using methods of the custom client to load the command & event folders
-client.addSlashCommands(join(__dirname, "./slashCommands"));
-client.addCommands(join(__dirname, "./commands"));
-client.addEvents(join(__dirname, "./events"));
-```
-
-## Listening to events
-
-There are two ways of producing event handlers, the first of which being the standard approach.
-```ts
-// ready is only emited once the bot starts thats why we use "once" here instead of "on"
-client.once("ready", async () => {
-    console.log(`${client.user?.username} is Ready`)
-})
-```
-The alternative however, is by making use of the event handler type, included using the same approach as standard commands.\
-To do this create an events folder and add it like shown above, then create a TypeScript source file within.\
-Intellisense systems should also acknowledge and operate under this approach, as long as the generic type is supplied.
-```ts
-// Importing the Event type from the library.
-// The Event type requires 1 generic argument being the event type you wish to handle.
-import { Event } from "infinite-client";
-
-export default {
-    // the event string must be the same as the generic type.
-    event: "ready",
-    type: "once",
-    run: async (client) => {
-        console.log(`${client.user?.username} is Ready`)
-    }
-} as Event<"ready">
-```
-
-## Creating slash commands
-To create slash commands we will use the discord.js builders together with our handler.\
-Now create the slash commands folder and a `.ts` file inside, the way that slash commands are handled are pretty similar to the ones suggested on the discord.js guide
-```ts
-// import the oficial djs builder
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { ISlashCommand } from "infinite-client";
-
-export default {
-    // create the command with the builder normally, the handler will take of everything
-    data: new SlashCommandBuilder()
-        .setName("ping")
-        .setDescription("Replys with pong!"),
-    execute: async (interaction) => {
-        interaction.reply("Pong!")
-    }
-} as ISlashCommand
-```
-
-## Handling message commands
-The traditional approach for handling message based commands are supported; again the handler is pretty similar to the one suggested on the discord.js guide.
-```ts
-import { ICommand } from "infinite-client";
-
-export default {
-    name: "ping",
-    execute: async ({ message }) => {
-        message.reply("Pong!")
-    }
-} as ICommand
-```
-
-#### Our Discord server: [link](https://discord.gg/ZpCV9Cd8YN)
+### Arguments passed to the Handler
+| Argument  | Type                                                                        |
+| --------- | --------------------------------------------------------------------------- |
+| `message` | `Message`                                                                   |
+| `args`    | `Array<string>` (all of what the user has writen together with the command) |
+| `command` | `string` (the command name)                                                 |
+| `client`  | `InfiniteClient`                                                            |
