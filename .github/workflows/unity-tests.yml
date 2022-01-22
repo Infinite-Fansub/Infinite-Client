@@ -20,5 +20,4 @@ jobs:
           node-version: "17"
       - run: |
           npm ci
-          npm ci --prefix "./nekos.life api"
           npm run build
