@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node ./src/client.ts",
     "build": "tsc",
-    "test": "ts-node ./examples/basic-bot/basic-bot.ts"
+    "test": "ts-node ./examples/basic-bot/basic-bot.ts",
+    "test:dev": "ts-node ./test/bot.ts"
   },
   "types": "dist",
   "repository": {
@@ -19,7 +20,7 @@
     "@discordjs/builders": "^0.11.0",
     "@discordjs/rest": "^0.2.0-canary.0",
     "colours.js": "^3.0.4",
-    "discord-api-types": "^0.25.2",
+    "discord-api-types": "^0.26.1",
     "discord.js": "^13.6.0",
     "mongoose": "^6.0.12"
   },

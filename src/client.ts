@@ -1,18 +1,18 @@
-import { Client, Collection, Interaction, Message } from "discord.js";
+import { Routes, RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v9";
+import { Client, Interaction, Message } from "discord.js";
+import { REST } from "@discordjs/rest";
+import { connect } from "mongoose";
 import { Event, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from "./typings/index";
 import Handler from "./utils/handler";
-import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v9";
-import { connect } from "mongoose";
 
 export class InfiniteClient extends Client {
 
     private djsRest: REST;
     declare public options: IClientOptions;
-    public prefix: string;
-    public commands: Collection<string, ICommand> = new Collection();
-    public slashCommands: Collection<string, ISlashCommand> = new Collection();
-    public events: Collection<string, Event<any>> = new Collection();
+    public prefix: string = "!";
+    public commands: Map<string, ICommand> = new Map();
+    public slashCommands: Map<string, ISlashCommand> = new Map();
+    public events: Map<string, Event<any>> = new Map();
     public handler: Handler = new Handler(this);
 
     constructor(token: string, options: IClientOptions) {
@@ -28,12 +28,11 @@ export class InfiniteClient extends Client {
             this.handler.dirs.slashCommands && this.handler.loadSlashCommands();
             this.handler.dirs.commands && this.handler.loadCommands();
             this.handler.dirs.events && this.handler.loadEvents();
-            this.registerSlashCommands()
         })
 
         this.djsRest = new REST({ version: "9" }).setToken(this.token);
-        this.prefix = "!";
 
+        this.once("ready", this.registerSlashCommands);
         this.on("interactionCreate", async (interaction) => this.onInteraction(interaction));
         this.on("messageCreate", async (message) => this.onMessage(message));
     }
@@ -100,16 +99,31 @@ export class InfiniteClient extends Client {
 
     private async registerSlashCommands() {
         try {
-            const guild = await this.guilds.fetch()
-            guild.map(async (g) => {
-                if (!this.user) throw new Error("Client is not logged in");
-                const cmdJson = this.slashCommands.map((command) => command.data).map((command) => command.toJSON())
-                await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, g.id), { body: cmdJson })
-                this.emit("loadedSlash", cmdJson)
+            this.slashCommands.forEach(async (command) => {
+                if (!command.post || command.post === "ALL") {
+                    (await this.guilds.fetch()).map(async (guild) => {
+                        await this.postCommand("Guild", this.user?.id ?? "", command.data.toJSON(), guild.id)
+                    })
+                } else if (Array.isArray(command.post)) {
+                    command.post.forEach(async (guild) => {
+                        await this.postCommand("Guild", this.user?.id ?? "", command.data.toJSON(), guild)
+                    })
+                } else if (!(command.post === "GLOBAL")) {
+                    await this.postCommand("Guild", this.user?.id ?? "", command.data.toJSON(), command.post)
+                } else {
+                    await this.postCommand("Global", this.user?.id ?? "", command.data.toJSON())
+                }
             })
         } catch (err) {
-            console.error(err)
+            throw new Error(`There was an error while trying to load (/) commands\n${err}`)
         }
+    }
+
+    private async postCommand(type: "Global" | "Guild", userId: string, commands: RESTPostAPIApplicationCommandsJSONBody, guildId?: string) {
+        console.log(commands)
+        const route = type === "Guild" ? Routes.applicationGuildCommands : Routes.applicationCommands
+        await this.djsRest.put(route(userId, guildId ?? ""), { body: [commands] })
+        return this.emit("loadedSlash", commands, type, this)
     }
 
     public async deleteSlashCommands() {
@@ -120,8 +134,11 @@ export class InfiniteClient extends Client {
             guild.map(async (g) => {
                 if (!this.user) throw new Error("Client is not logged in");
                 await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, g.id), { body: [] })
-                this.emit("deletedSlash")
+                this.emit("deletedSlash", "Guild", this)
             })
+            if (!this.user) throw new Error("Client is not logged in");
+            await this.djsRest.put(Routes.applicationCommands(this.user.id), { body: [] })
+            this.emit("deletedSlash", "Global", this)
         } catch (err) {
             console.error(err)
         }
