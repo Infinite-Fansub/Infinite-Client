@@ -81,7 +81,8 @@ export class InfiniteClient extends Client {
         if (message.author.bot || message.channel.type == "DM") return;
         if (message.content.startsWith(this.prefix)) {
             if (message.content.trim().split(/ /g)[0].length <= this.prefix.length) return;
-            const args = message.content.replace(/(\r\n|\n|\r)/g, " ").slice(this.prefix.length).trim().split(/ /g);
+            const args = message.content.slice(this.prefix.length).trim().split(/ /g);
+            const formattedArgs = message.content.replace(/(\r\n|\n|\r)/g, " ").slice(this.prefix.length).trim().split(/ /g);
             const cmd = args.shift()?.toLowerCase();
             if (typeof cmd != "string") return console.log(`CMD is not a string\nCMD:\n${cmd}`);
 
@@ -90,7 +91,7 @@ export class InfiniteClient extends Client {
             if (!command) return;
             try {
                 if (command?.enabled === false) return;
-                await command.execute({ message, args, command: cmd, client: this })
+                await command.execute({ message, args, formattedArgs, command: cmd, client: this })
             } catch (err) {
                 console.error(err);
             }

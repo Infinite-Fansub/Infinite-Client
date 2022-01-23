@@ -22,7 +22,7 @@ export interface ICommand {
 };
 
 export interface CommandArgs {
-    message: Message, args: string[], command: string, client: InfiniteClient
+    message: Message, args: string[], formattedArgs: string[], command: string, client: InfiniteClient
 }
 
 export type Guild = GuildId | GuildId[] | "ALL";
