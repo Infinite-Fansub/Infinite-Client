@@ -105,10 +105,10 @@ module.exports = {
 | `run`     | Handle the event callback                                                                                                          |
 
 ### Our custom events
-| Syntax         | Arguments                                                                                                 | Description                                                                     |
-| -------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `loadedSlash`  | commands: `RESTPostAPIApplicationCommandsJSONBody`, type: `"Global" \| "Guild"`, client: `InfiniteClient` | Emited when slash commands are loaded                                           |
-| `deletedSlash` | type: `"Global" \| "Guild"`, client: `Infinite Client`                                                    | Emited when slash commands are deleted using the `deleteSlashCommands` function |
+| Syntax         | Arguments                                                                                                    | Description                                                                                                                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `loadedSlash`  | commands: `LoadedSlashArgsCommand`, commandsArray: `Array<LoadedSlashArgsCommand>`, client: `InfiniteClient` | Emited when slash commands are loaded. (commandsArray was made because of a request of a member of the team). `LoadedSlashArgsCommand = {command: RESTPostAPIApplicationCommandsJSONBody, type: "Global" | "Guild"}` |
+| `deletedSlash` | type: `"Global" \| "Guild"`, client: `Infinite Client`                                                       | Emited when slash commands are deleted using the `deleteSlashCommands` function                                                                                                                                      |
 
 ## SlashCommands Handler Options
 | Syntax        | Description                                                                                                                                                                                          |

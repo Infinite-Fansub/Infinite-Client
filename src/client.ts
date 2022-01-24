@@ -121,10 +121,9 @@ export class InfiniteClient extends Client {
     }
 
     private async postCommand(type: "Global" | "Guild", userId: string, commands: RESTPostAPIApplicationCommandsJSONBody, guildId?: string) {
-        console.log(commands)
         const route = type === "Guild" ? Routes.applicationGuildCommands : Routes.applicationCommands
         await this.djsRest.put(route(userId, guildId ?? ""), { body: [commands] })
-        return this.emit("loadedSlash", commands, type, this)
+        return this.emit("loadedSlash", { commands, type, client: this })
     }
 
     public async deleteSlashCommands() {
