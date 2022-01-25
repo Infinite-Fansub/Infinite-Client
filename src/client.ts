@@ -32,7 +32,7 @@ export class InfiniteClient extends Client {
 
         this.djsRest = new REST({ version: "9" }).setToken(this.token);
 
-        this.once("ready", this.registerSlashCommands);
+        this.on("ready", async () => await this.registerSlashCommands());
         this.on("interactionCreate", async (interaction) => this.onInteraction(interaction));
         this.on("messageCreate", async (message) => this.onMessage(message));
     }

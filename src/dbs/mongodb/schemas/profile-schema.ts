@@ -1,12 +1,11 @@
 import { Document, Schema, model, Model } from "mongoose";
 import { Snowflake } from "discord-api-types";
-import { UserTag } from "../../../typings/index";
 
 export interface IUser {
     guildId: Snowflake,
     userId: Snowflake,
     name: string,
-    tag: UserTag,
+    tag: string,
     xp: number,
     level: number,
     ignoreRoles: Object,
