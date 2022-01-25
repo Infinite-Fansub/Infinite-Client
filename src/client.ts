@@ -1,4 +1,4 @@
-import { Routes, RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v9";
+import { Routes } from "discord-api-types/v9";
 import { Client, Interaction, Message } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { connect } from "mongoose";
@@ -99,31 +99,17 @@ export class InfiniteClient extends Client {
     }
 
     private async registerSlashCommands() {
-        try {
-            this.slashCommands.forEach(async (command) => {
-                if (!command.post || command.post === "ALL") {
-                    (await this.guilds.fetch()).map(async (guild) => {
-                        await this.postCommand("Guild", this.user?.id ?? "", command.data.toJSON(), guild.id)
-                    })
-                } else if (Array.isArray(command.post)) {
-                    command.post.forEach(async (guild) => {
-                        await this.postCommand("Guild", this.user?.id ?? "", command.data.toJSON(), guild)
-                    })
-                } else if (!(command.post === "GLOBAL")) {
-                    await this.postCommand("Guild", this.user?.id ?? "", command.data.toJSON(), command.post)
-                } else {
-                    await this.postCommand("Global", this.user?.id ?? "", command.data.toJSON())
-                }
-            })
-        } catch (err) {
-            throw new Error(`There was an error while trying to load (/) commands\n${err}`)
-        }
-    }
-
-    private async postCommand(type: "Global" | "Guild", userId: string, commands: RESTPostAPIApplicationCommandsJSONBody, guildId?: string) {
-        const route = type === "Guild" ? Routes.applicationGuildCommands : Routes.applicationCommands
-        await this.djsRest.put(route(userId, guildId ?? ""), { body: [commands] })
-        return this.emit("loadedSlash", { commands, type, client: this })
+        const allSlashCommands = [...this.slashCommands.values()];
+        const globalCommands = allSlashCommands.filter((command) => command.post === "GLOBAL");
+        const globalJson = globalCommands.map((command) => command.data.toJSON());
+        await this.djsRest.put(Routes.applicationCommands(this.user?.id ?? ""), { body: globalJson })
+            .then(() => this.emit("loadedSlash", globalJson, "Global", this));
+        (await this.guilds.fetch()).forEach(async (_, guildId) => {
+            const guildCommands = allSlashCommands.filter((command) => command.post === "ALL" || command.post === guildId || Array.isArray(command.post) && command.post.includes(guildId));
+            const guildJson = guildCommands.map((command) => command.data.toJSON());
+            await this.djsRest.put(Routes.applicationGuildCommands(this.user?.id ?? "", guildId), { body: guildJson })
+                .then(() => this.emit("loadedSlash", guildJson, guildId, this));
+        });
     }
 
     public async deleteSlashCommands() {

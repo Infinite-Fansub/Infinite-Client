@@ -105,10 +105,10 @@ module.exports = {
 | `run`     | Handle the event callback                                                                                                          |
 
 ### Our custom events
-| Syntax         | Arguments                                                                                                    | Description                                                                                                                                                                                                          |
-| -------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `loadedSlash`  | commands: `LoadedSlashArgsCommand`, commandsArray: `Array<LoadedSlashArgsCommand>`, client: `InfiniteClient` | Emited when slash commands are loaded. (commandsArray was made because of a request of a member of the team). `LoadedSlashArgsCommand = {command: RESTPostAPIApplicationCommandsJSONBody, type: "Global" | "Guild"}` |
-| `deletedSlash` | type: `"Global" \| "Guild"`, client: `Infinite Client`                                                       | Emited when slash commands are deleted using the `deleteSlashCommands` function                                                                                                                                      |
+| Syntax         | Arguments                                                                                                        | Description                                                                     |
+| -------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `loadedSlash`  | commands: `Array<RESTPostAPIApplicationCommandsJSONBody>`, type: `"Global" \| guildId`, client: `InfiniteClient` | Emited when slash commands are loaded.                                          |
+| `deletedSlash` | type: `"Global" \| "Guild"`, client: `Infinite Client`                                                           | Emited when slash commands are deleted using the `deleteSlashCommands` function |
 
 ## SlashCommands Handler Options
 | Syntax        | Description                                                                                                                                                                                          |
@@ -134,10 +134,10 @@ module.exports = {
 | `execute`     | Handle the command                                                                                                                     |
 
 ### Arguments passed to the Handler
-| Argument        | Type                                                                                                                                                                                     |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `message`       | `Message`                                                                                                                                                                                |
-| `args`          | `Array<string>` - all of what the user has writen together with the command                                                                                                              |
-| `formattedArgs` | `Array<string>` - like the array but removes all the line breaks (in `agrs` if the user uses a line break, one of the args will be `["first\nsecond"]` instead of `["first", "second"]`) |
-| `command`       | `string` - the command name                                                                                                                                                              |
-| `client`        | `InfiniteClient`                                                                                                                                                                         |
+| Argument        | Type                                                                                                                                                                                          |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `message`       | `Message`                                                                                                                                                                                     |
+| `args`          | `Array<string>` - all of what the user has writen together with the command                                                                                                                   |
+| `formattedArgs` | `Array<string>` - like the args array but removes all the line breaks (in `agrs` if the user uses a line break, one of the args will be `["first\nsecond"]` instead of `["first", "second"]`) |
+| `command`       | `string` - the command name                                                                                                                                                                   |
+| `client`        | `InfiniteClient`                                                                                                                                                                              |
