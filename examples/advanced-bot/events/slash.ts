@@ -8,6 +8,5 @@ export default {
     run: (command, type) => {
         if (type === "Global") command.forEach((command) => logger.infinitePrint(`Global (/) command loaded: ${command.name}`, true))
         else command.forEach((command) => logger.infinitePrint(`Guild (/) command ${command.name} loaded`, true))
-        console.log("T")
     }
 } as Event<"loadedSlash">

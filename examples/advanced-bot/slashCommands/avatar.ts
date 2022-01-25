@@ -13,8 +13,8 @@ export default {
     post: "ALL", // this means all guilds
     enabled: true,
     execute: async (interaction) => {
-        if (!(interaction.member.user instanceof User)) return;
-        let user = interaction.options.getUser("user") || interaction.member.user;
+        if (!(interaction.member?.user instanceof User)) return;
+        let user = interaction.options.getUser("user") || interaction.member?.user;
         const embed = new MessageEmbed()
             .setTitle(`${user.username}'s Avatar`)
             .setImage(user.displayAvatarURL({ size: 2048, dynamic: true }))
