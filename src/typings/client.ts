@@ -4,7 +4,6 @@ export interface IClientOptions extends ClientOptions {
     useDatabase: boolean;
     databaseType?: DatabaseTypes;
     dirs?: DirectoryTypes;
-    publishCommands?: "global" | "guild" | "both";
 };
 
 export interface DirectoryTypes {

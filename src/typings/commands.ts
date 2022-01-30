@@ -1,9 +1,9 @@
-import { CommandInteraction, ReplyMessageOptions, Message } from "discord.js";
+import { CommandInteraction, Awaitable, Message } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { InfiniteClient } from "../client";
 
-export type SlashCommandExecute = (interaction: CommandInteraction, client: InfiniteClient) => Promise<string | ReplyMessageOptions | void> | ReplyMessageOptions | string | void;
-export type CommandExecute = (options: CommandArgs) => Promise<string | void> | string | void;
+export type SlashCommandExecute = (interaction: CommandInteraction, client: InfiniteClient) => Awaitable<void>;
+export type CommandExecute = (options: CommandArgs) => Awaitable<void>;
 
 export interface ISlashCommand {
     data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
@@ -21,7 +21,7 @@ export interface ICommand {
 };
 
 export interface CommandArgs {
-    message: Message, args: string[], formattedArgs: string[], command: string, client: InfiniteClient
+    message: Message, args: string[], command: string, client: InfiniteClient
 }
 
 export type Guild = string | string[] | "ALL";
