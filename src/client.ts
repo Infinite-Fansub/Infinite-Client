@@ -42,9 +42,7 @@ export class InfiniteClient extends Client {
     private buildDB(): void {
         if (!this.options.useDatabase) return console.error("Some options might not work without a database")
 
-        const type = typeof this.options.databaseType === "object"
-            ? this.options.databaseType.type
-            : this.options.databaseType
+        const type = typeof this.options.databaseType === "object" ? this.options.databaseType.type : this.options.databaseType;
 
         switch (type) {
             case "mongo":
@@ -83,7 +81,7 @@ export class InfiniteClient extends Client {
     }
 
     private jsonHandler(): void {
-
+        throw new Error()
     }
 
     private async onInteraction(interaction: Interaction) {
@@ -101,18 +99,16 @@ export class InfiniteClient extends Client {
     private async onMessage(message: Message) {
         if (message.author.bot || message.channel.type == "DM") return;
         if (message.content.startsWith(this.prefix)) {
-            if (message.content.trim().split(/ /g)[0].length <= this.prefix.length) return;
-            const args = message.content.slice(this.prefix.length).trim().split(/ /g);
-            const formattedArgs = message.content.replace(/(\r\n|\n|\r)/g, " ").slice(this.prefix.length).trim().split(/ /g);
+            const args = message.content.slice(this.prefix.length).trim().split(/\s+/g);
             const cmd = args.shift()?.toLowerCase();
-            if (typeof cmd != "string") return console.log(`CMD is not a string\nCMD:\n${cmd}`);
+            if (!cmd) return console.log(`CMD is not a string\nCMD:\n${cmd}`);
 
             if (!this.commands.has(cmd)) return;
             const command = this.commands.get(cmd);
             if (!command) return;
             try {
                 if (command?.enabled === false) return;
-                await command.execute({ message, args, formattedArgs, command: cmd, client: this })
+                await command.execute({ message, args, command: cmd, client: this })
             } catch (err) {
                 console.error(err);
             }
@@ -121,13 +117,17 @@ export class InfiniteClient extends Client {
 
     private async registerSlashCommands() {
         const allSlashCommands = [...this.slashCommands.values()];
+
         const globalCommands = allSlashCommands.filter((command) => command.post === "GLOBAL");
         const globalJson = globalCommands.map((command) => command.data.toJSON());
+
         await this.djsRest.put(Routes.applicationCommands(this.user?.id ?? ""), { body: globalJson })
             .then(() => this.emit("loadedSlash", globalJson, "Global", this));
+
         (await this.guilds.fetch()).forEach(async (_, guildId) => {
             const guildCommands = allSlashCommands.filter((command) => command.post === "ALL" || command.post === guildId || Array.isArray(command.post) && command.post.includes(guildId));
             const guildJson = guildCommands.map((command) => command.data.toJSON());
+            
             await this.djsRest.put(Routes.applicationGuildCommands(this.user?.id ?? "", guildId), { body: guildJson })
                 .then(() => this.emit("loadedSlash", guildJson, guildId, this));
         });
@@ -137,10 +137,10 @@ export class InfiniteClient extends Client {
 
         // TODO: Make it possible to delete only specific commands
         try {
-            const guild = await this.guilds.fetch()
-            guild.map(async (g) => {
+            const allGuilds = await this.guilds.fetch()
+            allGuilds.map(async (guild) => {
                 if (!this.user) throw new Error("Client is not logged in");
-                await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, g.id), { body: [] })
+                await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, guild.id), { body: [] })
                 this.emit("deletedSlash", "Guild", this)
             })
             if (!this.user) throw new Error("Client is not logged in");

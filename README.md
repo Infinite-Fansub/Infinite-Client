@@ -1,8 +1,8 @@
 [![Git Package](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/github-publish.yml/badge.svg)](https://github.com/Infinite-Fansub/Infinite-Client/actions/workflows/github-publish.yml)
 
 # Installation
-[![NPM](https://nodei.co/npm/infinite-client.png)](https://nodei.co/npm/infinite-client)
 
+[![NPM](https://nodei.co/npm/infinite-client.png)](https://nodei.co/npm/infinite-client)
 
 # Using the Library
 
@@ -44,14 +44,17 @@ client.addEvents(join(__dirname, "./events"));
 ## Listening to events
 
 There are two ways of producing event handlers, the first of which being the standard approach.
+
 ```js
 // ready is only emited once the bot starts thats why we use "once" here instead of "on"
 client.once("ready", async () => {
     console.log(`${client.user?.username} is Ready`)
 })
 ```
+
 The alternative however, is by making use of the event handler type included using the same approach as standard commands.\
 To do this create an events folder and add it like shown above, then create a JavaScript source file within.\
+
 ```js
 module.exports = {
     event: "ready",
@@ -66,6 +69,7 @@ module.exports = {
 
 To create slash commands we will use the discord.js builders together with our handler.\
 Now create the slash commands folder and a JavaScript file inside, the way that slash commands are handled are pretty similar to the ones suggested on the discord.js guide
+
 ```js
 // import the oficial djs builder
 const { SlashCommandBuilder } = require("@discordjs/builders");
@@ -84,6 +88,7 @@ module.exports = {
 ## Handling message commands
 
 The traditional approach for handling message based commands are supported; again the handler is pretty similar to the one suggested on the discord.js guide.
+
 ```js
 module.exports = {
     name: "ping",
@@ -96,21 +101,24 @@ module.exports = {
 # Options
 
 ## Event Handler Options
+
 | Syntax    | Description                                                                                                                        |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `name`    | *Optional*: The name will only be used to find the command on the events Map                                                       |
+| `name`    | *Optional*: The name will only be used to find the corresponding function on the events                                            |
 | `event`   | The event that you want to listen to. Example: `"ready"`, `"messageCreate"`                                                        |
 | `type`    | Type of listener, this being `on` or `once`                                                                                        |
 | `enabled` | *Optional*: If the event is enabled or not (usefull to handle per-guild events), if no value is provided it will default to `true` |
 | `run`     | Handle the event callback                                                                                                          |
 
 ### Our custom events
+
 | Syntax         | Arguments                                                                                                        | Description                                                                     |
 | -------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `loadedSlash`  | commands: `Array<RESTPostAPIApplicationCommandsJSONBody>`, type: `"Global" \| guildId`, client: `InfiniteClient` | Emited when slash commands are loaded.                                          |
 | `deletedSlash` | type: `"Global" \| "Guild"`, client: `Infinite Client`                                                           | Emited when slash commands are deleted using the `deleteSlashCommands` function |
 
-## SlashCommands Handler Options
+## Slash Command Handler Options
+
 | Syntax        | Description                                                                                                                                                                                          |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `data`        | The slash command data to be sent to the api **We do not support raw json yet**                                                                                                                      |
@@ -119,25 +127,27 @@ module.exports = {
 | `enabled`     | *Optional*: If the command is enabled or not (usefull to handle per-guild commands), if no value is provided it will default to `true`                                                               |
 | `execute`     | Handle the interaction                                                                                                                                                                               |
 
-### Arguments passed to the Handler
+### Slash Command Arguments
+
 | Argument      | Type                 |
 | ------------- | -------------------- |
 | `interaction` | `CommandInteraction` |
 | `client`      | `InfiniteClient`     |
 
-## Commands Handler Options
+## Traditional Command Handler Options
+
 | Syntax        | Description                                                                                                                            |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`        | The name of the command, this is how the command will be called (<prefix>commandName)                                                  |
+| `name`        | The name of the command, this is how the command will be called (\<prefix>commandName)                                                 |
 | `description` | The discription is only added to the Map and not shown on the data sent do the api, this is to make a `help` command easier to make    |
 | `enabled`     | *Optional*: If the command is enabled or not (usefull to handle per-guild commands), if no value is provided it will default to `true` |
 | `execute`     | Handle the command                                                                                                                     |
 
-### Arguments passed to the Handler
-| Argument        | Type                                                                                                                                                                                          |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `message`       | `Message`                                                                                                                                                                                     |
-| `args`          | `Array<string>` - all of what the user has writen together with the command                                                                                                                   |
-| `formattedArgs` | `Array<string>` - like the args array but removes all the line breaks (in `agrs` if the user uses a line break, one of the args will be `["first\nsecond"]` instead of `["first", "second"]`) |
-| `command`       | `string` - the command name                                                                                                                                                                   |
-| `client`        | `InfiniteClient`                                                                                                                                                                              |
+### Traditional Command Arguments
+
+| Argument  | Type             | Description |
+| --------- | ---------------- | ----------- |
+| `message` | `Message`        | The message which requested the command |
+| `args`    | `Array<string>`  | The arguments supplied to the command |
+| `command` | `string`         | The name of the called command |
+| `client`  | `InfiniteClient` | The calling instance of the client |
