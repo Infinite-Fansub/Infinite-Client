@@ -1,6 +1,7 @@
 import { InfiniteClient } from "../client";
 import { DirectoryTypes } from "../typings/index";
 import recursiveRead from "./recursive-read";
+import { Event } from "..";
 
 export default class Handler {
 
@@ -31,11 +32,10 @@ export default class Handler {
     public loadEvents(dir: string = this.dirs?.events!) {
         recursiveRead(dir)
             .forEach(async (path) => {
-                const event = (await import(path)).default;
+                const event = (await import(path)).default as Event<any>;
                 this.client.events.set(event.event, event)
-                this.client[event.type as "on" | "once"](event.event, (...args) => {
-                    if (event.enabled === false) return;
-                    event.run(...args)
+                this.client[event.type](event.event, (...args) => {
+                    if (event.enabled ?? true) event.run(...args)
                 })
             })
     }
