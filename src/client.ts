@@ -2,7 +2,8 @@ import { Routes } from "discord-api-types/v9";
 import { Client, Interaction, Message } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { connect } from "mongoose";
-import { Event, ICommand, ISlashCommand, IClientOptions, DatabaseTypes } from "./typings/index";
+import { createClient, RedisClientType } from "redis";
+import { Event, ICommand, ISlashCommand, IClientOptions } from "./typings/index";
 import Handler from "./utils/handler";
 
 export class InfiniteClient extends Client {
@@ -14,6 +15,7 @@ export class InfiniteClient extends Client {
     public slashCommands: Map<string, ISlashCommand> = new Map();
     public events: Map<string, Event<any>> = new Map();
     public handler: Handler = new Handler(this);
+    public redis?: RedisClientType<any, any>;
 
     constructor(token: string, options: IClientOptions) {
         super(options);
@@ -48,6 +50,9 @@ export class InfiniteClient extends Client {
             case "mongo":
                 this.mongoHandler()
                 break
+            case "redis":
+                this.redisHandler()
+                break
             case "json":
                 this.jsonHandler()
                 break
@@ -58,7 +63,23 @@ export class InfiniteClient extends Client {
 
     private async mongoHandler(): Promise<void> {
         if (typeof this.options.databaseType !== "object") return;
-        await connect(this.options.databaseType.mongoPath)
+        if (this.options.databaseType.path instanceof Object) return;
+        await connect(this.options.databaseType.path)
+    }
+
+    private async redisHandler(): Promise<void> {
+        if (this.options.databaseType === "json") return;
+        let url: string = "";
+        if (typeof this.options.databaseType?.path === "object") {
+            const uriParts = this.options.databaseType?.path
+            url = `${uriParts.username}:${uriParts.password}@${uriParts.entrypoint}:${uriParts.port}`
+        } else if (typeof this.options.databaseType?.path === "string") {
+            url = this.options.databaseType.path
+        }
+
+        const client = createClient({ url })
+        client.on("error", (err) => { throw new Error(err) })
+        this.redis = client
     }
 
     private jsonHandler(): void {

@@ -16,16 +16,16 @@ const { InfiniteClient } = require("infinite-client");
 // Used to maintain easy cross compatibility between operating systems.
 const { join } = require("path");
 
-// We have a token and a path for mongodb stored in a local json file of the format *{ "token": "your-token", "mongoPath": "your-uri" }*
+// We have a token and a path for mongodb stored in a local json file of the format *{ "token": "your-token", "path": "your-uri" }*
 // Alternative approaches may instead be used.
-const { token, mongoPath } = require("./config.json");
+const { token, path } = require("./config.json");
 
 // Initialise the client passing the token and providing optional information.
 // Most intellisense systems should acknowledge and supply the available options.
 const client = new InfiniteClient(token, {
     intents: 32511, // 0b0111_1110_1111_1111
     useDatabase: true,
-    databaseType: { type: "mongo", mongoPath },
+    databaseType: { type: "mongo", path },
     /* There are two approaches for supplying commands and events:
     - Including as additional options used during construction. */
     dirs: {

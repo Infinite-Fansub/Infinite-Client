@@ -13,9 +13,21 @@ export interface DirectoryTypes {
     events?: string;
 };
 
-export type DatabaseTypes = MongoType | "json" //"json" | "mongo" | "redis"
+export type DatabaseTypes = MongoType | RedisType | "json"
 
 export interface MongoType {
     type: "mongo"
-    mongoPath: string
+    path: string
 };
+
+export interface RedisType {
+    type: "redis"
+    path: RedisObject | string
+}
+
+export interface RedisObject {
+    username: string,
+    password: string,
+    entrypoint: string,
+    port?: string
+}
