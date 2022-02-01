@@ -1,5 +1,5 @@
 import { Routes } from "discord-api-types/v9";
-import { Client, Interaction, Message } from "discord.js";
+import { Client, Interaction, Message, ChannelType } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { connect } from "mongoose";
 import { createClient, RedisClientType } from "redis";
@@ -85,7 +85,7 @@ export class InfiniteClient extends Client {
     }
 
     private async onInteraction(interaction: Interaction) {
-        if (!interaction.isCommand()) return;
+        if (!interaction.isChatInputCommand()) return;
         const command = this.slashCommands.get(interaction.commandName);
         if (!command) return;
         try {
@@ -97,7 +97,7 @@ export class InfiniteClient extends Client {
     }
 
     private async onMessage(message: Message) {
-        if (message.author.bot || message.channel.type == "DM") return;
+        if (message.author.bot || message.channel.type === ChannelType.DM) return;
         if (message.content.startsWith(this.prefix)) {
             const args = message.content.slice(this.prefix.length).trim().split(/\s+/g);
             const cmd = args.shift()?.toLowerCase();
@@ -126,29 +126,29 @@ export class InfiniteClient extends Client {
         (await this.guilds.fetch()).forEach(async (_, guildId) => {
             const guildCommands = allSlashCommands.filter((command) => command.post === "ALL" || command.post === guildId || Array.isArray(command.post) && command.post.includes(guildId));
             const guildJson = guildCommands.map((command) => command.data.toJSON());
-            
+
             await this.djsRest.put(Routes.applicationGuildCommands(this.user?.id ?? "", guildId), { body: guildJson })
                 .then(() => this.emit("loadedSlash", guildJson, guildId, this));
         });
     }
 
-    public async deleteSlashCommands() {
+    // public async deleteSlashCommands() {
 
-        // TODO: Make it possible to delete only specific commands
-        try {
-            const allGuilds = await this.guilds.fetch()
-            allGuilds.map(async (guild) => {
-                if (!this.user) throw new Error("Client is not logged in");
-                await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, guild.id), { body: [] })
-                this.emit("deletedSlash", "Guild", this)
-            })
-            if (!this.user) throw new Error("Client is not logged in");
-            await this.djsRest.put(Routes.applicationCommands(this.user.id), { body: [] })
-            this.emit("deletedSlash", "Global", this)
-        } catch (err) {
-            console.error(err)
-        }
-    }
+    //     TODO: Make it possible to delete only specific commands
+    //     try {
+    //         const allGuilds = await this.guilds.fetch()
+    //         allGuilds.map(async (guild) => {
+    //             if (!this.user) throw new Error("Client is not logged in");
+    //             await this.djsRest.put(Routes.applicationGuildCommands(this.user.id, guild.id), { body: [] })
+    //             this.emit("deletedSlash", "Guild", this)
+    //         })
+    //         if (!this.user) throw new Error("Client is not logged in");
+    //         await this.djsRest.put(Routes.applicationCommands(this.user.id), { body: [] })
+    //         this.emit("deletedSlash", "Global", this)
+    //     } catch (err) {
+    //         console.error(err)
+    //     }
+    // }
 
     public addCommands(path: string) {
         this.handler?.addDirs({ commands: path })
