@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, User } from "discord.js";
+import { Embed, User } from "discord.js";
 import { ISlashCommand } from "../../../src";
 
 export default {
@@ -15,9 +15,9 @@ export default {
     execute: async (interaction) => {
         if (!(interaction.member?.user instanceof User)) return;
         let user = interaction.options.getUser("user") || interaction.member?.user;
-        const embed = new MessageEmbed()
+        const embed = new Embed()
             .setTitle(`${user.username}'s Avatar`)
-            .setImage(user.displayAvatarURL({ size: 2048, dynamic: true }))
+            .setImage(user.displayAvatarURL({ size: 2048 }))
             .setTimestamp()
         interaction.reply({ embeds: [embed] })
     }
