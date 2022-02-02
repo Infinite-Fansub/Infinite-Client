@@ -21,7 +21,7 @@
     "@discordjs/rest": "^0.3.0",
     "colours.js": "^3.1.2",
     "discord-api-types": "^0.26.1",
-    "discord.js": "^14.0.0-dev.1643674011.803665",
+    "discord.js": "^14.0.0-dev.1643803384.883943",
     "mongoose": "^6.1.8",
     "redis": "^4.0.3"
   },
