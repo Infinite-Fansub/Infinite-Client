@@ -1,6 +1,6 @@
 {
   "name": "@infinite-fansub/infinite-client",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "description": "The main core for all infinite bots",
   "main": "dist/index.js",
   "scripts": {

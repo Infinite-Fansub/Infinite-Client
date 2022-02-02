@@ -1,4 +1,7 @@
-import { ClientOptions } from "discord.js"
+import { ClientOptions } from "discord.js";
+import { createClient } from "redis";
+
+export type RedisClient = ReturnType<typeof createClient>
 
 export interface IClientOptions extends ClientOptions {
     useDatabase: boolean;

@@ -2,8 +2,8 @@ import { Routes } from "discord-api-types/v9";
 import { Client, Interaction, Message } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { connect } from "mongoose";
-import { createClient, RedisClientType } from "redis";
-import { Event, ICommand, ISlashCommand, IClientOptions } from "./typings/index";
+import { createClient } from "redis";
+import { Event, ICommand, ISlashCommand, IClientOptions, RedisClient } from "./typings/index";
 import Handler from "./utils/handler";
 
 export class InfiniteClient extends Client {
@@ -15,7 +15,7 @@ export class InfiniteClient extends Client {
     public slashCommands: Map<string, ISlashCommand> = new Map();
     public events: Map<string, Event<any>> = new Map();
     public handler: Handler = new Handler(this);
-    public redis?: RedisClientType<any, any>;
+    public redis?: RedisClient;
 
     constructor(token: string, options: IClientOptions) {
         super(options);
@@ -78,6 +78,7 @@ export class InfiniteClient extends Client {
 
         const client = createClient({ url })
             .on("error", (err: any) => { throw new Error(err) })
+        client.json
         return await client.connect()
     }
 
