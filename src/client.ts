@@ -70,7 +70,7 @@ export class InfiniteClient extends Client {
         let url: string = "";
         if (typeof this.options.databaseType?.path === "object") {
             const uriParts = this.options.databaseType?.path
-            url = `${uriParts.username}:${uriParts.password}@${uriParts.entrypoint}:${uriParts.port}`
+            url = `${uriParts.username}:${uriParts.password}@${uriParts.entrypoint.match(/:\d$/) ? uriParts.entrypoint : `${uriParts.entrypoint}:${uriParts.port}`}`
         } else if (typeof this.options.databaseType?.path === "string") {
             url = this.options.databaseType.path
         }
@@ -81,7 +81,7 @@ export class InfiniteClient extends Client {
     }
 
     private jsonHandler(): void {
-        throw new Error()
+        throw new Error("NOT_IMPLEMENTED")
     }
 
     private async onInteraction(interaction: Interaction) {
