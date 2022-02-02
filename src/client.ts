@@ -47,10 +47,10 @@ export class InfiniteClient extends Client {
 
         switch (type) {
             case "mongo":
-                this.mongoHandler()
+                await this.mongoHandler()
                 break
             case "redis":
-                await this.redisHandler()
+                this.redisHandler()
                 break
             case "json":
                 this.jsonHandler()
@@ -66,17 +66,17 @@ export class InfiniteClient extends Client {
         await connect(this.options.databaseType.path)
     }
 
-    private async redisHandler(): Promise<void> {
+    private redisHandler(): void {
         if (this.options.databaseType === "json") return;
         let url: string = "";
         if (typeof this.options.databaseType?.path === "object") {
             const uriParts = this.options.databaseType?.path
-            url = `${uriParts.username}:${uriParts.password}@${uriParts.entrypoint}:${uriParts.port}`
+            url = `redis://${uriParts.username}:${uriParts.password}@${uriParts.entrypoint}:${uriParts.port}`
         } else if (typeof this.options.databaseType?.path === "string") {
             url = this.options.databaseType.path
         }
 
-        this.redis = await createClient({ url })
+        this.redis = createClient({ url })
             .on("error", (err: any) => { throw new Error(err) })
     }
 
