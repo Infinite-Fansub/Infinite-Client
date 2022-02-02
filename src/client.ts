@@ -75,9 +75,8 @@ export class InfiniteClient extends Client {
             url = this.options.databaseType.path
         }
 
-        const client = createClient({ url })
-        client.on("error", (err) => { throw new Error(err) })
-        this.redis = client
+        this.redis = createClient({ url })
+            .on("error", (err) => { throw new Error(err) })
     }
 
     private jsonHandler(): void {
