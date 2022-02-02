@@ -16,6 +16,7 @@ export class InfiniteClient extends Client {
     public events: Map<string, Event<any>> = new Map();
     public handler: Handler = new Handler(this);
     public redis?: RedisClient;
+    public redisLogin?: string;
 
     constructor(token: string, options: IClientOptions) {
         super(options);
@@ -78,7 +79,7 @@ export class InfiniteClient extends Client {
 
         const client = createClient({ url })
             .on("error", (err: any) => { throw new Error(err) })
-        client.json
+            .on("ready", () => this.redisLogin && console.log(this.redisLogin))
         return await client.connect()
     }
 
