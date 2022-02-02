@@ -16,13 +16,11 @@ export class InfiniteClient extends Client {
     public events: Map<string, Event<any>> = new Map();
     public handler: Handler = new Handler(this);
     public redis?: RedisClient;
-    public redisLogin?: string;
 
     constructor(token: string, options: IClientOptions) {
         super(options);
         this.token = token;
-        this.buildDB()
-        this.login(this.token).then(() => {
+        this.login(this.token).then(async () => {
             this.handler?.addDirs({
                 commands: this.options.dirs?.commands,
                 slashCommands: this.options.dirs?.slashCommands,
@@ -32,11 +30,12 @@ export class InfiniteClient extends Client {
             this.handler.dirs.slashCommands && this.handler.loadSlashCommands();
             this.handler.dirs.commands && this.handler.loadCommands();
             this.handler.dirs.events && this.handler.loadEvents();
+            await this.buildDB()
+            await this.registerSlashCommands()
         })
 
         this.djsRest = new REST({ version: "9" }).setToken(this.token);
 
-        this.on("ready", async () => await this.registerSlashCommands());
         this.on("interactionCreate", async (interaction) => this.onInteraction(interaction));
         this.on("messageCreate", async (message) => this.onMessage(message));
     }
@@ -51,7 +50,7 @@ export class InfiniteClient extends Client {
                 await this.mongoHandler()
                 break
             case "redis":
-                this.redisHandler()
+                await this.redisHandler()
                 break
             case "json":
                 this.jsonHandler()
@@ -79,8 +78,9 @@ export class InfiniteClient extends Client {
 
         const client = createClient({ url })
             .on("error", (err: any) => { throw new Error(err) })
-            .on("ready", () => this.redisLogin && console.log(this.redisLogin))
-        return await client.connect()
+            .on("ready", () => this.emit("redisReady", this))
+        this.redis = client
+        await client.connect();
     }
 
     private jsonHandler(): void {
