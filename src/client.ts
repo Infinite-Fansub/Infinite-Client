@@ -20,6 +20,7 @@ export class InfiniteClient extends Client {
     constructor(token: string, options: IClientOptions) {
         super(options);
         this.token = token;
+        this.buildDB()
         this.login(this.token).then(() => {
             this.handler?.addDirs({
                 commands: this.options.dirs?.commands,
@@ -39,7 +40,7 @@ export class InfiniteClient extends Client {
         this.on("messageCreate", async (message) => this.onMessage(message));
     }
 
-    private buildDB(): void {
+    private async buildDB(): Promise<void> {
         if (!this.options.useDatabase) return console.error("Some options might not work without a database")
 
         const type = typeof this.options.databaseType === "object" ? this.options.databaseType.type : this.options.databaseType;
@@ -49,7 +50,7 @@ export class InfiniteClient extends Client {
                 this.mongoHandler()
                 break
             case "redis":
-                this.redisHandler()
+                await this.redisHandler()
                 break
             case "json":
                 this.jsonHandler()
@@ -75,8 +76,8 @@ export class InfiniteClient extends Client {
             url = this.options.databaseType.path
         }
 
-        this.redis = createClient({ url })
-            .on("error", (err) => { throw new Error(err) })
+        this.redis = await createClient({ url })
+            .on("error", (err: any) => { throw new Error(err) })
     }
 
     private jsonHandler(): void {
@@ -125,7 +126,7 @@ export class InfiniteClient extends Client {
         (await this.guilds.fetch()).forEach(async (_, guildId) => {
             const guildCommands = allSlashCommands.filter((command) => command.post === "ALL" || command.post === guildId || Array.isArray(command.post) && command.post.includes(guildId));
             const guildJson = guildCommands.map((command) => command.data.toJSON());
-            
+
             await this.djsRest.put(Routes.applicationGuildCommands(this.user?.id ?? "", guildId), { body: guildJson })
                 .then(() => this.emit("loadedSlash", guildJson, guildId, this));
         });
