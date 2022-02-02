@@ -66,7 +66,7 @@ export class InfiniteClient extends Client {
         await connect(this.options.databaseType.path)
     }
 
-    private redisHandler(): void {
+    private async redisHandler(): Promise<void> {
         if (this.options.databaseType === "json") return;
         let url: string = "";
         if (typeof this.options.databaseType?.path === "object") {
@@ -76,8 +76,9 @@ export class InfiniteClient extends Client {
             url = this.options.databaseType.path
         }
 
-        this.redis = createClient({ url })
+        const client = createClient({ url })
             .on("error", (err: any) => { throw new Error(err) })
+        return await client.connect()
     }
 
     private jsonHandler(): void {
