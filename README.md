@@ -116,7 +116,7 @@ module.exports = {
 | -------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `loadedSlash`  | commands: `Array<RESTPostAPIApplicationCommandsJSONBody>`, type: `"Global" \| guildId`, client: `InfiniteClient` | Emited when slash commands are loaded.                                          |
 | `deletedSlash` | type: `"Global" \| "Guild"`, client: `Infinite Client`                                                           | Emited when slash commands are deleted using the `deleteSlashCommands` function |
-| `redisReady`   | client: `InfiniteClient`                                                                                         | Emited when the redis client logs in                                            |
+| `redisEvents`  | type: `RedisEventTypes`, client: `InfiniteClient`                                                                | Emited when the redis client logs in                                            |
 ## Slash Command Handler Options
 
 | Syntax        | Description                                                                                                                                                                                          |

@@ -7,7 +7,7 @@ export type EventExecute<E extends keyof IClientEvents> = (...args: IClientEvent
 export interface IClientEvents extends ClientEvents {
     loadedSlash: [commands: RESTPostAPIApplicationCommandsJSONBody[], type: "Global" | string, client: InfiniteClient];
     deletedSlash: [type: "Global" | "Guild", client: InfiniteClient];
-    redisReady: [client: InfiniteClient];
+    redisEvents: [type: RedisEventTypes, client: InfiniteClient];
 }
 
 export interface Event<E extends keyof IClientEvents> {
@@ -17,3 +17,5 @@ export interface Event<E extends keyof IClientEvents> {
     enabled?: boolean;
     run: EventExecute<E>;
 };
+
+export type RedisEventTypes = "connected" | "ready" | "end" | "error" | "reconnecting"

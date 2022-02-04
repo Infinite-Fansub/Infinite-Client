@@ -78,7 +78,10 @@ export class InfiniteClient extends Client {
 
         const client = createClient({ url })
             .on("error", (err: any) => { throw new Error(err) })
-            .on("ready", () => this.emit("redisReady", this))
+            .on("connect", () => this.emit("redisEvents", "connected", this))
+            .on("ready", () => this.emit("redisEvents", "ready", this))
+            .on("end", () => this.emit("redisEvents", "end", this))
+            .on("reconnecting", () => this.emit("redisEvents", "reconnecting", this));
         this.redis = client
         await client.connect();
     }
