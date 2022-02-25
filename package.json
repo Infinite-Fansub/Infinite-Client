@@ -23,7 +23,7 @@
     "discord-api-types": "^0.27.1",
     "discord.js": "^13.6.0",
     "mongoose": "^6.2.3",
-    "redis": "^4.0.2"
+    "redis": "^4.0.4"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
