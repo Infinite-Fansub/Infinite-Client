@@ -22,7 +22,7 @@
     "colours.js": "^3.1.2",
     "discord-api-types": "^0.29.0",
     "discord.js": "^13.6.0",
-    "mongoose": "^6.2.8",
+    "mongoose": "^6.2.11",
     "redis": "^4.0.4"
   },
   "publishConfig": {
