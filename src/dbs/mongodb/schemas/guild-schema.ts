@@ -1,5 +1,5 @@
 import { Document, Schema, model } from "mongoose";
-import { Snowflake } from "discord-api-types";
+import { Snowflake } from "discord-api-types/v10";
 
 export interface IGuild {
     guildId: Snowflake,

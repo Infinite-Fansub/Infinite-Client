@@ -17,13 +17,13 @@
   "author": "DidaS",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.12.0",
-    "@discordjs/rest": "^0.3.0",
+    "@discordjs/builders": "^0.13.0",
+    "@discordjs/rest": "^0.4.1",
     "colours.js": "^3.1.2",
-    "discord-api-types": "^0.26.1",
-    "discord.js": "^14.0.0-dev.1643803384.883943",
+    "discord-api-types": "^0.31.2",
+    "discord.js": "^14.0.0-dev.1650240532-9ef7ffd",
     "mongoose": "^6.1.8",
-    "redis": "^4.0.3"
+    "redis-om": "^0.2.1"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
