@@ -7,9 +7,9 @@ export interface IClientOptions extends ClientOptions {
 };
 
 export interface DirectoryTypes {
-    commands?: string;
-    slashCommands?: string;
-    events?: string;
+    commands?: string | undefined;
+    slashCommands?: string | undefined;
+    events?: string | undefined;
 };
 
 export type DatabaseTypes = MongoType | RedisType | "json"
